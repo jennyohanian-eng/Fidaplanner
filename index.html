@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIDA - Wedding Planner</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:Arial;background:#FFF8F0;color:#3a2a2a}
+header{background:#D4A373;color:white;padding:18px;text-align:center;font-size:22px;font-weight:bold;letter-spacing:2px}
+.topbar{display:flex;gap:8px;padding:12px;flex-wrap:wrap;justify-content:center}
+.topbar input,.topbar select{padding:10px;border:1px solid #ddd;border-radius:10px}
+.topbar button{padding:10px 14px;border:none;border-radius:10px;background:#D4A373;color:white;font-weight:bold;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;padding:14px}
+.card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.08);cursor:pointer}
+.card img{width:100%;height:160px;object-fit:cover}
+.card-body{padding:12px}
+.card-body h3{margin:0} .pill{display:inline-block;background:#FFE8D6;padding:4px 8px;border-radius:20px;font-size:12px;margin-top:6px}
+.detail{display:none;padding:14px} .detail.active{display:block}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tabs button{padding:9px 12px;border:1px solid #ddd;background:white;border-radius:20px;cursor:pointer}
+.tabs button.active{background:#D4A373;color:white;border-color:#D4A373}
+.tab{display:none} .tab.active{display:block}
+.item{background:white;border:1px solid #eee;border-radius:12px;padding:12px;margin-bottom:10px}
+.item b{font-size:15px} .muted{color:#888;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap} .row input,.row select{flex:1;min-width:120px;padding:10px;border:1px solid #ddd;border-radius:10px}
+.btn{padding:10px 12px;border:none;border-radius:10px;background:#D4A373;color:white;font-weight:bold;cursor:pointer}
+.btn-ghost{background:#eee;color:#333} .danger{background:#e74c3c}
+.addbox{background:white;margin:14px;padding:14px;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.addbox h3{margin-top:0} .hidden{display:none}
+</style>
+</head>
+<body>
+<header>FIDA ✨ Wedding Planner</header>
+
+<!-- HOME -->
+<div id="home">
+  <div class="topbar">
+    <input id="search" placeholder="Search couple... ex: Dena" oninput="render()">
+    <select id="filterStatus" onchange="render()"><option value="">All Status</option><option>Planning</option><option>Confirmed</option><option>Done</option></select>
+    <button onclick="showHome()">🏠 Home</button>
+  </div>
+  <div id="couplesGrid" class="grid"></div>
+
+  <div class="addbox">
+    <h3>➕ Add New Couple</h3>
+    <div class="row">
+      <input id="newBride" placeholder="Bride name - ex: Dena">
+      <input id="newGroom" placeholder="Groom name - ex: Omar">
+      <input id="newDate" type="date">
+      <input id="newVenue" placeholder="Venue - ex: Villa Linda">
+      <input id="newBudget" type="number" placeholder="Total Budget $">
+    </div>
+    <br><button class="btn" onclick="addCouple()">Add Couple + Save to Firebase</button>
+    <p class="muted">Ba3ed ma tkebes Add, l couple byenzal fo2 bel grid, w byerja3 ybayen la elik w la Maria 3a nafs l wa2et.</p>
+  </div>
+</div>
+
+<!-- DETAIL PAGE LA KEL COUPLE -->
+<div id="detail" class="detail">
+  <button class="btn btn-ghost" onclick="showHome()">← Back to All Couples</button>
+  <h2 id="dTitle"></h2>
+  <p id="dMeta" class="muted"></p>
+  <p><b>Total Budget:</b> $<span id="dBudget"></span> | <b>Spent:</b> $<span id="dSpent">0</span> | <b>Left:</b> $<span id="dLeft">0</span></p>
+
+  <div class="tabs">
+    <button onclick="showTab('catering',this)" class="active">🍽️ Catering</button>
+    <button onclick="showTab('zaffe',this)">🥁 Zaffe</button>
+    <button onclick="showTab('photo',this)">📸 Photographer</button>
+    <button onclick="showTab('flowers',this)">🌸 Flowers</button>
+    <button onclick="showTab('budget',this)">💰 Budget</button>
+    <button onclick="showTab('schedule',this)">🗓️ Schedule</button>
+  </div>
+
+  <div id="tab-catering" class="tab active"></div>
+  <div id="tab-zaffe" class="tab"></div>
+  <div id="tab-photo" class="tab"></div>
+  <div id="tab-flowers" class="tab"></div>
+  <div id="tab-budget" class="tab"></div>
+  <div id="tab-schedule" class="tab"></div>
+
+  <div class="addbox">
+    <h3>Add Item to Current Tab</h3>
+    <div class="row">
+      <input id="itemName" placeholder="Name - ex: Zaatar Catering / Zaffe Beirut">
+      <input id="itemPrice" type="number" placeholder="Price $">
+      <input id="itemNote" placeholder="Note - Phone, details...">
+      <select id="itemStatus"><option>Pending</option><option>Confirmed</option><option>Paid</option></select>
+    </div>
+    <br><button class="btn" onclick="addItem()">Add to <span id="curTabLabel">Catering</span></button>
+  </div>
+  <br><button class="btn danger" onclick="deleteCouple()">Delete This Couple</button>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDqR7yCp7R1uCkc8R0q0P6QJmz9J1c4Q",
+  authDomain: "fida-d675c.firebaseapp.com",
+  databaseURL: "https://fida-d675c-default-rtdb.firebaseio.com",
+  projectId: "fida-d675c",
+  storageBucket: "fida-d675c.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const couplesRef = db.ref('couples');
+
+let couples = {};
+let currentId = null;
+let currentTab = 'catering';
+
+couplesRef.on('value', snap => {
+  couples = snap.val() || {};
+  // EXAMPLE - iza l database fadiye, mn7ot Dena & Omar ka example
+  if(Object.keys(couples).length===0){
+    const ex = couplesRef.push();
+    ex.set({
+      bride:"Dena", groom:"Omar", date:"2026-09-12", venue:"Villa Linda Sursock", budget:25000, status:"Planning",
+      img:"https://images.unsplash.com/photo-1519741497674-611481863552?w=800",
+      items:{
+        catering:[{name:"Zaatar Catering",price:8000,note:"Tasting on Friday, 150 guests",status:"Confirmed"}],
+        zaffe:[{name:"Zaffe Beirut Stars",price:2500,note:"8 drummers + dancers",status:"Pending"}],
+        photo:[{name:"Ahmad Photography",price:3000,note:"Full day + drone",status:"Confirmed"}],
+        flowers:[{name:"White Roses Decor",price:2000,note:"White + blush",status:"Pending"}],
+        budget:[{name:"Venue Deposit",price:5000,note:"Paid",status:"Paid"}],
+        schedule:[{name:"Hair & Makeup",price:0,note:"10:00 AM at home",status:"Pending"}]
+      }
+    });
+    return;
+  }
+  render();
+  if(currentId) renderDetail();
+});
+
+function render(){
+  const grid=document.getElementById('couplesGrid');
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  const f=document.getElementById('filterStatus').value;
+  grid.innerHTML='';
+  Object.entries(couples).forEach(([id,c])=>{
+    const name=(c.bride+' '+c.groom).toLowerCase();
+    if(q && !name.includes(q)) return;
+    if(f && c.status!==f) return;
+    const d=document.createElement('div');
+    d.className='card';
+    d.onclick=()=>openCouple(id);
+    d.innerHTML=`<img src="${c.img||'https://images.unsplash.com/photo-1519741497674-611481863552?w=800'}"><div class="card-body"><h3>${c.bride} & ${c.groom}</h3><div class="muted">${c.date||''} • ${c.venue||''}</div><span class="pill">${c.status||'Planning'} • $${c.budget||0}</span><div class="muted" style="margin-top:6px">Kbes la tfoot 3a saf7et l couple → Catering / Zaffe / Photographer...</div></div>`;
+    grid.appendChild(d);
+  });
+}
+
+function addCouple(){
+  const bride=document.getElementById('newBride').value.trim();
+  const groom=document.getElementById('newGroom').value.trim();
+  if(!bride||!groom) return alert('3abbe esm l bride w groom');
+  const ref=couplesRef.push();
+  ref.set({
+    bride, groom,
+    date:document.getElementById('newDate').value,
+    venue:document.getElementById('newVenue').value,
+    budget:Number(document.getElementById('newBudget').value||0),
+    status:"Planning",
+    img:"https://images.unsplash.com/photo-1519741497674-611481863552?w=800",
+    items:{catering:[],zaffe:[],photo:[],flowers:[],budget:[],schedule:[]}
+  });
+  alert('Nzil! '+bride+' & '+groom+' sar fo2 bel list');
+  document.getElementById('newBride').value=''; document.getElementById('newGroom').value='';
+}
+
+function openCouple(id){
+  currentId=id; currentTab='catering';
+  document.getElementById('home').classList.add('hidden');
+  document.getElementById('detail').classList.add('active');
+  renderDetail();
+  showTab('catering', document.querySelector('.tabs button'));
+  window.scrollTo(0,0);
+}
+function showHome(){
+  document.getElementById('home').classList.remove('hidden');
+  document.getElementById('detail').classList.remove('active');
+  currentId=null;
+}
+function showTab(tab, btn){
+  currentTab=tab;
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('curTabLabel').innerText=tab;
+  renderDetail();
+}
+function renderDetail(){
+  if(!currentId) return;
+  const c=couples[currentId]; if(!c) return;
+  document.getElementById('dTitle').innerText=c.bride+' & '+c.groom+' 💍';
+  document.getElementById('dMeta').innerText=(c.date||'')+' • '+(c.venue||'')+' • '+(c.status||'');
+  document.getElementById('dBudget').innerText=c.budget||0;
+  let spent=0;
+  ['catering','zaffe','photo','flowers','budget','schedule'].forEach(k=>{
+    const list=(c.items&&c.items[k])||[];
+    list.forEach(it=> spent+=Number(it.price||0));
+    const el=document.getElementById('tab-'+k);
+    if(!el) return;
+    if(list.length===0) el.innerHTML='<p class="muted">Lissa ma fi shi hon. Zid item men ta7et.</p>';
+    else el.innerHTML=list.map((it,i)=>`<div class="item"><b>${it.name}</b> - $${it.price} - ${it.status}<div class="muted">${it.note||''}</div><br><button class="btn danger" onclick="deleteItem('${k}',${i})">Delete</button></div>`).join('');
+  });
+  document.getElementById('dSpent').innerText=spent;
+  document.getElementById('dLeft').innerText=(Number(c.budget||0)-spent);
+}
+function addItem(){
+  const name=document.getElementById('itemName').value.trim();
+  if(!name) return alert('3abbe l esm');
+  const c=couples[currentId];
+  const list=(c.items&&c.items[currentTab])||[];
+  list.push({name, price:Number(document.getElementById('itemPrice').value||0), note:document.getElementById('itemNote').value, status:document.getElementById('itemStatus').value});
+  db.ref('couples/'+currentId+'/items/'+currentTab).set(list);
+  document.getElementById('itemName').value=''; document.getElementById('itemPrice').value=''; document.getElementById('itemNote').value='';
+}
+function deleteItem(tab,i){
+  const list=[...((couples[currentId].items&&couples[currentId].items[tab])||[])];
+  list.splice(i,1);
+  db.ref('couples/'+currentId+'/items/'+tab).set(list);
+}
+function deleteCouple(){
+  if(confirm('Akeed badik tem7e hayda l couple?')){ db.ref('couples/'+currentId).remove(); showHome(); }
+}
+</script>
+</body>
+</html>
