@@ -59,7 +59,6 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 .schedRow{display:flex;gap:8px;align-items:center;background:#FFFaf5;padding:12px;border-radius:12px;margin-top:8px}
 .schedRow .time{font-weight:bold;min-width:68px;text-align:center;background:white;padding:6px 4px;border-radius:8px;font-size:12px;line-height:1.3}
 .iconBtn{border:0;background:white;border-radius:50%;width:28px;height:28px;font-size:14px;cursor:pointer;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.circleBtn{border:2px solid #D9A679;background:white;border-radius:50%;width:28px;height:28px;font-size:15px;cursor:pointer;flex-shrink:0;line-height:1}
 .todayBox{background:#FFF0C9;border:2px solid #D9A679;border-radius:14px;padding:14px;margin-top:12px}
 @media(max-width:700px){.couples{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.week{grid-template-columns:1fr 1fr}}
 </style>
@@ -143,9 +142,9 @@ function renderSchedule(){
   grid.innerHTML=html;
   document.getElementById('weekTitle').innerText=`📅 Week: ${monday.getDate()} ${monthsShort[monday.getMonth()]} - ${new Date(monday.getTime()+6*86400000).getDate()} ${monthsShort[new Date(monday.getTime()+6*86400000).getMonth()]} (Mon to Sun)`;
   let todays=allItems.filter(it=>it.date===todayStr);
-  document.getElementById('todayBox').innerHTML=`<p style="font-size:13px;color:#666;margin:0 0 10px">Date: ${formatDateNice(todayStr)}</p>${todays.length?todays.map(it=>`<div class="schedRow"><span class="time">${formatTime12(it.time)}</span><span style="flex:1"><b style="${it.done?'text-decoration:line-through;color:#999':''}">${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button class="iconBtn" onclick="editPersonal(${it.idx})">✏️</button><button class="circleBtn" onclick="togglePersonal(${it.idx})">${it.done?'✅':'○'}</button><button class="iconBtn" onclick="delPersonal(${it.idx})">✕</button></div>`).join(''):'<p style="color:#666">No items today.</p>'}`;
+  document.getElementById('todayBox').innerHTML=`<p style="font-size:13px;color:#666;margin:0 0 10px">Date: ${formatDateNice(todayStr)}</p>${todays.length?todays.map(it=>`<div class="schedRow"><span class="time">${formatTime12(it.time)}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button class="iconBtn" onclick="editPersonal(${it.idx})">✏️</button><button class="iconBtn" onclick="delPersonal(${it.idx})">✕</button></div>`).join(''):'<p style="color:#666">No items today.</p>'}`;
   let upcoming=allItems.filter(it=>it.date>=todayStr);
-  document.getElementById('scheduleList').innerHTML=upcoming.map(it=>`<div class="schedRow"><span class="time">${formatDateShort(it.date)}<br>${formatTime12(it.time)}</span><span style="flex:1"><b style="${it.done?'text-decoration:line-through;color:#999':''}">${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button class="iconBtn" onclick="editPersonal(${it.idx})">✏️</button><button class="circleBtn" onclick="togglePersonal(${it.idx})">${it.done?'✅':'○'}</button><button class="iconBtn" onclick="delPersonal(${it.idx})">✕</button></div>`).join('')||'<p style="color:#999">No schedule yet. Add one below - only what you add will show here.</p>';
+  document.getElementById('scheduleList').innerHTML=upcoming.map(it=>`<div class="schedRow"><span class="time">${formatDateShort(it.date)}<br>${formatTime12(it.time)}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button class="iconBtn" onclick="editPersonal(${it.idx})">✏️</button><button class="iconBtn" onclick="delPersonal(${it.idx})">✕</button></div>`).join('')||'<p style="color:#999">No schedule yet. Add one below - only what you add will show here.</p>';
 }
 function prevWeek(){weekOffset--;renderSchedule();}
 function nextWeek(){weekOffset++;renderSchedule();}
@@ -173,7 +172,6 @@ function editPersonal(idx){
   document.getElementById('personalTitle').scrollIntoView({behavior:'smooth'});
 }
 function delPersonal(idx,e){if(e)e.stopPropagation();if(confirm('Delete this schedule item?')){personal.splice(idx,1);savePersonal();}}
-function togglePersonal(idx){personal[idx].done=!personal[idx].done;savePersonal();}
 function addEvent(){let n=document.getElementById('evName').value.trim();let d=document.getElementById('evDate').value;if(!n||!d){alert('Please enter event name + date!');return;}events.unshift({name:n,date:d,type:document.getElementById('evType').value,place:document.getElementById('evPlace').value,notes:document.getElementById('evNotes').value});saveEvents();['evName','evPlace','evNotes'].forEach(id=>document.getElementById(id).value='');renderEvents();}
 function delEvent(i){if(confirm('Delete this event?')){events.splice(i,1);saveEvents();}}
 function renderEvents(){let el=document.getElementById('eventList');if(!el)return;let q=(document.getElementById('eventSearch')?.value||'').toLowerCase();let html='';events.forEach((e,i)=>{if(q&&!e.name.toLowerCase().includes(q))return;html+=`<div class="couple"><button class="del" onclick="delEvent(${i})">✕</button><h3>${e.type} ${e.name}</h3><p>📅 ${formatDateNice(e.date)}</p><p>📍 ${e.place||'-'}</p><p>📝 ${e.notes||''}</p></div>`;});el.innerHTML=html||'<p style="text-align:center;color:#999">No events yet.</p>';}
