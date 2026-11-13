@@ -10,30 +10,35 @@
 *{box-sizing:border-box;font-family:Arial,sans-serif}
 body{margin:0;background:#FFF6EC;color:#3a2a20}
 header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-size:24px;font-weight:bold;letter-spacing:2px}
-.center{max-width:420px;margin:60px auto;background:white;padding:25px;border-radius:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.1)}
+.center{max-width:440px;margin:40px auto;background:white;padding:25px;border-radius:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.1)}
 .center input{width:100%;padding:14px;border-radius:12px;border:1px solid #eee;margin:12px 0;font-size:16px;text-align:center}
-.center button{width:100%;padding:14px;border:0;border-radius:12px;background:#D9A679;color:white;font-weight:bold;font-size:16px}
-.top{max-width:900px;margin:15px auto;padding:0 12px;display:flex;gap:8px}
-.top input,.top select{flex:1;padding:12px;border-radius:12px;border:1px solid #e8d5c0;background:white}
+.center button{width:100%;padding:14px;border:0;border-radius:12px;background:#D9A679;color:white;font-weight:bold;font-size:16px;margin-top:8px}
+.tabBtn{padding:10px 8px;border:0;border-radius:20px;background:#FFF0E0;font-weight:bold;cursor:pointer;flex:1}
+.tabBtn.active{background:#D9A679;color:white}
+.top{max-width:940px;margin:15px auto;padding:0 12px;display:flex;gap:8px;flex-wrap:wrap}
+.top input,.top select{flex:1;min-width:140px;padding:12px;border-radius:12px;border:1px solid #e8d5c0;background:white}
 .top button{padding:12px 14px;border-radius:12px;border:0;background:#D9A679;color:white;font-weight:bold}
-.card{max-width:900px;margin:10px auto;background:white;border-radius:18px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.card{max-width:940px;margin:10px auto;background:white;border-radius:18px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid2 input,.grid2 select,.full input,.full textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #eee;background:#FFFaf5;font-size:15px}
 .full{margin-top:10px}
 .add{margin-top:14px;width:100%;padding:14px;border:0;border-radius:12px;background:#E8A87C;color:white;font-weight:bold;font-size:16px}
 .note{font-size:13px;color:#888;margin-top:10px}
-.couples{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:900px;margin:15px auto;padding:0 12px}
+.couples{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:940px;margin:15px auto;padding:0 12px}
 .couple{background:white;border-radius:16px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.06);cursor:pointer;position:relative}
 .couple h3{margin:0 0 6px;font-size:18px}
 .couple p{margin:4px 0;font-size:14px;color:#666}
 .badge{display:inline-block;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold;margin-top:8px}
 .badge.Confirmed{background:#D9F2D9;color:#2a6b2a}
 .badge.Pending{background:#FFF0C9;color:#8a6a00}
+.badge.Coordination{background:#E0EFFF;color:#2a4a8a}
+.badge.FullPlanning{background:#FFE0F0;color:#8a2a5a}
 .del{position:absolute;top:10px;right:10px;border:0;background:#ffeeee;border-radius:50%;width:28px;height:28px;cursor:pointer;z-index:2}
 .open{font-size:12px;color:#D9A679;font-weight:bold;margin-top:8px}
 .sync{text-align:center;font-size:12px;color:#2a6b2a;font-weight:bold;margin:8px}
+.follow{font-size:13px;background:#FFF0C9;padding:7px 10px;border-radius:10px;margin-top:8px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;overflow:auto;padding:15px;z-index:99}
-.modalBox{max-width:620px;background:white;margin:20px auto;border-radius:20px;padding:20px}
+.modalBox{max-width:640px;background:white;margin:20px auto;border-radius:20px;padding:20px}
 .modalBox label{font-size:13px;font-weight:bold;color:#888;display:block;margin:12px 0 5px}
 .modalBox input,.modalBox select,.modalBox textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #eee;font-size:15px}
 .btnRow{display:flex;gap:10px;margin-top:16px}
@@ -45,17 +50,33 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 .task{display:flex;gap:8px;align-items:center;background:#FFFaf5;padding:10px;border-radius:10px;margin-top:8px}
 .task input[type=checkbox]{width:20px;height:20px}
 .smallBtn{padding:8px 12px;border:0;border-radius:8px;background:#D9A679;color:white;font-weight:bold;cursor:pointer}
-@media(max-width:600px){.couples{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;max-width:940px;margin:10px auto;padding:0 12px}
+.day{background:white;border-radius:14px;padding:10px;min-height:130px;box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.day b{font-size:13px}
+.day.today{border:2px solid #D9A679}
+.dayItem{font-size:12px;background:#FFFaf5;padding:6px;border-radius:8px;margin-top:6px}
+@media(max-width:700px){.couples{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.week{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div id="login"><div class="center"><div style="font-size:40px">🔒</div><h2>FIDA ✨ Wedding Planner</h2><p style="color:#888">Private - For Fida Only</p><input id="pass" type="password" placeholder="Password"><button onclick="checkPass()">Enter</button><p id="err" style="color:red;display:none">Wrong password</p><p style="font-size:12px;color:#aaa">Password: FIDA2026</p></div></div>
+<div id="login"><div class="center"><div style="font-size:40px">🔒</div><h2>FIDA ✨ Planner</h2><p style="color:#888;font-size:13px">Choose page then enter its code</p>
+<div style="display:flex;gap:6px;margin:10px 0"><button class="tabBtn active" id="tabCouples" onclick="setTab('couples')">💍 Couples</button><button class="tabBtn" id="tabSchedule" onclick="setTab('schedule')">📅 Schedule</button><button class="tabBtn" id="tabEvents" onclick="setTab('events')">🎉 Events</button></div>
+<p id="tabHint" style="font-size:12px;color:#aaa">Couples Code: FIDA2026</p>
+<input id="pass" type="password" placeholder="Enter Code"><button onclick="checkPass()">Enter</button><p id="err" style="color:red;display:none">Wrong code</p>
+<p style="font-size:11px;color:#aaa">Couples: FIDA2026 • Schedule: FOLLOW2026 • Events: EVENTS2026</p></div></div>
+
 <div id="app" style="display:none">
-<header>FIDA ✨ Wedding Planner</header>
+<header id="headerTitle">FIDA ✨ Wedding Planner</header>
 <div class="sync">🟢 SYNCED - You & your partner see the same data live</div>
+
+<!-- COUPLES PAGE -->
+<div id="pageCouples">
 <div class="top">
-<input id="search" placeholder="Search couple... ex: Dena" oninput="render()">
+<input id="search" placeholder="Search couple..." oninput="render()">
+<input id="searchDate" type="date" onchange="render()"><button onclick="clearDate()" style="background:#eee;color:#333">Clear Date</button>
 <select id="filter" onchange="render()"><option value="All">All Status</option><option>Confirmed</option><option>Pending</option></select>
+<select id="filterPlan" onchange="render()"><option value="All">Coordination + Full Planning</option><option>Coordination</option><option>Full Planning</option></select>
+<button onclick="exportData()">📥 Export All</button>
 <button onclick="logout()">Logout 🔒</button>
 </div>
 <div class="card">
@@ -69,121 +90,85 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 <div class="full"><input id="guests" type="number" placeholder="Number of Guests - ex: 150"></div>
 <div class="grid2" style="margin-top:10px">
 <select id="status"><option>Confirmed</option><option>Pending</option></select>
-<input id="phone" placeholder="Phone - ex: 03 123456">
+<select id="planType"><option>Coordination</option><option>Full Planning</option></select>
 </div>
+<div class="grid2" style="margin-top:10px">
+<input id="phone" placeholder="Phone - ex: 03 123456">
+<input id="nextFollow" type="date" placeholder="Next Follow-up">
+</div>
+<div class="full"><input id="followNote" placeholder="Next Follow-up Note - ex: Call to confirm DJ"></div>
 <button class="add" onclick="addCouple()">Add Couple + Save</button>
-<div class="note">Click on any couple to open full details, vendors, budget and notes. Everything is synced live!</div>
+<div class="note">Click on any couple to open full details, vendors, budget and notes. Search by date to see who has wedding on that day.</div>
 </div>
 <div id="list" class="couples"></div>
 </div>
+
+<!-- SCHEDULE PAGE -->
+<div id="pageSchedule" style="display:none">
+<div class="top"><button onclick="prevWeek()">◀ Prev Week</button><button onclick="nextWeek()">Next Week ▶</button><button onclick="goToday()">Today</button><button onclick="logout()">Logout 🔒</button></div>
+<div class="card"><h2 id="weekTitle">📅 This Week - Mon to Sun</h2><p style="font-size:13px;color:#888">All your To-Do, Follow-ups, Weddings + Personal tasks in one place.</p>
+<div class="grid2"><input id="personalTitle" placeholder="Personal Task - ex: Buy gift, Call mom, Pay bill"><input id="personalDate" type="date"></div>
+<div class="full"><input id="personalNote" placeholder="Note - ex: For Dena wedding"></div>
+<button class="add" onclick="addPersonal()">+ Add Personal Task</button>
+</div>
+<div id="weekGrid" class="week"></div>
+<div class="card"><h3>✅ All To-Do List - Couples + Personal</h3><div id="allTasks"></div></div>
+</div>
+
+<!-- EVENTS PAGE -->
+<div id="pageEvents" style="display:none">
+<div class="top"><input id="eventSearch" placeholder="Search event..." oninput="renderEvents()"><button onclick="exportData()">📥 Export All</button><button onclick="logout()">Logout 🔒</button></div>
+<div class="card"><h2>🎉 Add New Event (Not Wedding)</h2>
+<div class="grid2"><input id="evName" placeholder="Event Name - ex: Sara Birthday"><input id="evDate" type="date"></div>
+<div class="grid2" style="margin-top:10px"><select id="evType"><option>🎂 Birthday</option><option>💍 Engagement</option><option>⛪ Baptism</option><option>🎓 Graduation</option><option>🥂 Party</option><option>✨ Other</option></select><input id="evPlace" placeholder="Place - ex: Beirut"></div>
+<div class="full"><textarea id="evNotes" rows="3" placeholder="Notes..."></textarea></div>
+<button class="add" onclick="addEvent()">Add Event + Save</button></div>
+<div id="eventList" class="couples"></div>
+</div>
+
+</div>
 <div id="modal" class="modal"><div class="modalBox" id="modalBox"></div></div>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBfAfVIX-CuJw_1kDnAkPipD6YahBauVVo",
-  authDomain: "fidaplanner.firebaseapp.com",
-  databaseURL: "https://fidaplanner-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "fidaplanner",
-  storageBucket: "fidaplanner.firebasestorage.app",
-  messagingSenderId: "228676254623",
-  appId: "1:228676254623:web:72070749b544bad1addbaa",
-  measurementId: "G-4CZ1021N5H"
-};
+const firebaseConfig = {apiKey:"AIzaSyBfAfVIX-CuJw_1kDnAkPipD6YahBauVVo",authDomain:"fidaplanner.firebaseapp.com",databaseURL:"https://fidaplanner-default-rtdb.europe-west1.firebasedatabase.app",projectId:"fidaplanner",storageBucket:"fidaplanner.firebasestorage.app",messagingSenderId:"228676254623",appId:"1:228676254623:web:72070749b544bad1addbaa",measurementId:"G-4CZ1021N5H"};
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const ref = db.ref('couples');
-const MY_PASS="FIDA2026";
-if(sessionStorage.getItem('fida_ok')==='yes'){showApp();}
-function checkPass(){if(document.getElementById('pass').value===MY_PASS){sessionStorage.setItem('fida_ok','yes');showApp();}else{document.getElementById('err').style.display='block';}}
-function showApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';}
-function logout(){sessionStorage.removeItem('fida_ok');location.reload();}
-let couples=[];
-let loaded=false;
-ref.on('value', (snap)=>{
-  let val=snap.val();
-  if(!val && !loaded){
-    let examples=[
-      {bride:'Dena',groom:'Omar',date:'2026-11-19',church:'St. Charbel - Kasrouane',guests:'150',status:'Confirmed',phone:'03 123456',venue:'Villa Sultana',budget:'25000',notes:'Bride wants white & gold decor. Zaffe at 8pm. Bride wants simple dress.',tasks:[{t:'Book Church',done:true},{t:'Book Photographer',done:false}],vendors:[{type:'📸 Photographer',name:'John Photography',phone:'03 111222',price:'3000',paid:'1000',details:'Full day, 2 photographers, album + video. Arrival 4pm at home.'},{type:'🥁 Zaffe',name:'Zaffe Beirut Stars',phone:'71 333444',price:'2500',paid:'500',details:'Zaffe at 8pm, 10 dancers, dabke & tabla. Arrival 7:30pm.'},{type:'🎤 DJ',name:'DJ Karim',phone:'03 555666',price:'1500',paid:'0',details:'From 9pm to 2am. Arabic & English playlist.'}]},
-      {bride:'Mira',groom:'Elie',date:'2026-12-05',church:'Notre Dame - Harissa',guests:'200',status:'Pending',phone:'71 654321',venue:'Chateau Rweiss',budget:'30000',notes:'Beach wedding, they want fireworks.',tasks:[{t:'Book Venue',done:true}],vendors:[{type:'📸 Photographer',name:'Studio Mira',phone:'03 777888',price:'2800',paid:'0',details:'Photo + drone video.'}]}
-    ];
-    ref.set(examples);
-    return;
-  }
-  loaded=true;
-  couples = val ? Object.keys(val).map(k=>({...val[k], _key:k})) : [];
-  render();
-});
-function save(){
-  let obj={};
-  couples.forEach((c,i)=>{let copy={...c}; delete copy._key; obj['c'+i]=copy;});
-  ref.set(obj);
-}
-function addCouple(){
-  let b=document.getElementById('bride').value.trim();let g=document.getElementById('groom').value.trim();
-  if(!b||!g){alert('Please enter Bride and Groom name!');return;}
-  couples.unshift({bride:b,groom:g,date:document.getElementById('date').value,church:document.getElementById('church').value,guests:document.getElementById('guests').value,status:document.getElementById('status').value,phone:document.getElementById('phone').value,venue:'',budget:'',notes:'',tasks:[],vendors:[]});
-  save();render();
-  ['bride','groom','church','guests','phone'].forEach(id=>document.getElementById(id).value='');
-}
+const db=firebase.database();
+const ref=db.ref('couples'); const refPersonal=db.ref('personalTasks'); const refEvents=db.ref('events');
+let couples=[]; let personal=[]; let events=[]; let loaded=false; let currentTab='couples'; let weekOffset=0; let current=-1;
+function setTab(t){currentTab=t;['couples','schedule','events'].forEach(x=>document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active',x===t));document.getElementById('tabHint').innerText=t==='couples'?'Couples Code: FIDA2026':t==='schedule'?'Schedule Code: FOLLOW2026':'Events Code: EVENTS2026';}
+function checkPass(){let v=document.getElementById('pass').value;let ok=(currentTab==='couples'&&v==='FIDA2026')||(currentTab==='schedule'&&v==='FOLLOW2026')||(currentTab==='events'&&v==='EVENTS2026');if(ok){sessionStorage.setItem('fida_page',currentTab);showApp();}else{document.getElementById('err').style.display='block';}}
+function showApp(){let p=sessionStorage.getItem('fida_page')||currentTab;document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('pageCouples').style.display=p==='couples'?'block':'none';document.getElementById('pageSchedule').style.display=p==='schedule'?'block':'none';document.getElementById('pageEvents').style.display=p==='events'?'block':'none';document.getElementById('headerTitle').innerText=p==='couples'?'FIDA ✨ Wedding Planner':p==='schedule'?'FIDA ✨ Follow-Up Schedule':'FIDA ✨ Events';render();renderSchedule();renderEvents();}
+if(sessionStorage.getItem('fida_page')){showApp();}
+function logout(){sessionStorage.removeItem('fida_page');location.reload();}
+function clearDate(){document.getElementById('searchDate').value='';render();}
+ref.on('value',snap=>{let val=snap.val();if(!val&&!loaded){let examples=[{bride:'Dena',groom:'Omar',date:'2026-11-19',church:'St. Charbel - Kasrouane',guests:'150',status:'Confirmed',planType:'Full Planning',phone:'03 123456',nextFollow:'2026-11-14',followNote:'Call to confirm DJ',venue:'Villa Sultana',budget:'25000',notes:'Bride wants white & gold decor. Zaffe at 8pm.',tasks:[{t:'Book Church',done:true},{t:'Book Photographer',done:false}],vendors:[{type:'📸 Photographer',name:'John Photography',phone:'03 111222',price:'3000',paid:'1000',details:'Full day, 2 photographers.'},{type:'🥁 Zaffe',name:'Zaffe Beirut Stars',phone:'71 333444',price:'2500',paid:'500',details:'Zaffe at 8pm, 10 dancers.'},{type:'🎤 DJ',name:'DJ Karim',phone:'03 555666',price:'1500',paid:'0',details:'From 9pm to 2am.'}]},{bride:'Mira',groom:'Elie',date:'2026-12-05',church:'Notre Dame - Harissa',guests:'200',status:'Pending',planType:'Coordination',phone:'71 654321',nextFollow:'2026-11-20',followNote:'Send venue options',venue:'Chateau Rweiss',budget:'30000',notes:'Beach wedding, they want fireworks.',tasks:[{t:'Book Venue',done:true}],vendors:[{type:'📸 Photographer',name:'Studio Mira',phone:'03 777888',price:'2800',paid:'0',details:'Photo + drone video.'}]}];ref.set(examples);return;}loaded=true;couples=val?Object.keys(val).map(k=>({...val[k],_key:k})):[];render();renderSchedule();});
+refPersonal.on('value',snap=>{let v=snap.val();personal=v?Object.keys(v).map(k=>({...v[k],_key:k})):[];renderSchedule();});
+refEvents.on('value',snap=>{let v=snap.val();events=v?Object.keys(v).map(k=>({...v[k],_key:k})):[];renderEvents();});
+function save(){let o={};couples.forEach((c,i)=>{let cp={...c};delete cp._key;o['c'+i]=cp;});ref.set(o);}
+function savePersonal(){let o={};personal.forEach((p,i)=>{let cp={...p};delete cp._key;o['p'+i]=cp;});refPersonal.set(o);}
+function saveEvents(){let o={};events.forEach((e,i)=>{let cp={...e};delete cp._key;o['e'+i]=cp;});refEvents.set(o);}
+function addCouple(){let b=document.getElementById('bride').value.trim();let g=document.getElementById('groom').value.trim();if(!b||!g){alert('Please enter Bride and Groom name!');return;}couples.unshift({bride:b,groom:g,date:document.getElementById('date').value,church:document.getElementById('church').value,guests:document.getElementById('guests').value,status:document.getElementById('status').value,planType:document.getElementById('planType').value,phone:document.getElementById('phone').value,nextFollow:document.getElementById('nextFollow').value,followNote:document.getElementById('followNote').value,venue:'',budget:'',notes:'',tasks:[],vendors:[]});save();render();['bride','groom','church','guests','phone','followNote'].forEach(id=>document.getElementById(id).value='');}
 function del(i,e){e.stopPropagation();if(confirm('Delete this couple?')){couples.splice(i,1);save();}}
-function render(){
-  let searchEl=document.getElementById('search'); if(!searchEl) return;
-  let q=searchEl.value.toLowerCase();let f=document.getElementById('filter').value;let html='';
-  couples.forEach((c,i)=>{
-    if(q && !(c.bride+' '+c.groom).toLowerCase().includes(q))return;
-    if(f!=='All' && c.status!==f)return;
-    let total=(c.vendors||[]).reduce((s,v)=>s+(parseInt(v.price)||0),0);
-    html+=`<div class="couple" onclick="openCouple(${i})"><button class="del" onclick="del(${i},event)">✕</button><h3>💍 ${c.bride} & ${c.groom}</h3><p>📅 ${c.date||'-'}</p><p>⛪ ${c.church||'-'}</p><p>👥 Guests: ${c.guests||'-'} | 💰 Vendors: $${total}</p><span class="badge ${c.status}">${c.status}</span><div class="open">Click to open details →</div></div>`;
-  });
-  document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#999">No couples yet.</p>';
-}
-let current=-1;
-function openCouple(i){
-  current=i;let c=couples[i]; c.vendors=c.vendors||[]; c.tasks=c.tasks||[];
-  let vHtml=c.vendors.map((v,vi)=>`<div class="vendor"><h4>${v.type} - ${v.name}</h4><p>📞 ${v.phone||'-'}</p><p>💰 Price: $${v.price||0} | Paid: $${v.paid||0} | Remaining: $${(parseInt(v.price||0)-parseInt(v.paid||0))}</p><p>📝 ${v.details||''}</p><button class="smallBtn" onclick="delVendor(${vi})" style="background:#ffdddd;color:#a00">Delete Vendor</button></div>`).join('');
-  let tHtml=c.tasks.map((t,ti)=>`<div class="task"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${ti})"><span style="${t.done?'text-decoration:line-through;color:#999':''}">${t.t}</span><button onclick="delTask(${ti})" style="margin-left:auto;border:0;background:none">✕</button></div>`).join('');
-  document.getElementById('modalBox').innerHTML=`
-  <h2>💍 ${c.bride} & ${c.groom}</h2>
-  <label>Bride</label><input id="e_bride" value="${c.bride||''}">
-  <label>Groom</label><input id="e_groom" value="${c.groom||''}">
-  <label>Date</label><input id="e_date" type="date" value="${c.date||''}">
-  <label>Church</label><input id="e_church" value="${c.church||''}">
-  <label>Venue</label><input id="e_venue" value="${c.venue||''}">
-  <label>Guests</label><input id="e_guests" type="number" value="${c.guests||''}">
-  <label>Total Budget $</label><input id="e_budget" value="${c.budget||''}">
-  <label>Phone</label><input id="e_phone" value="${c.phone||''}">
-  <label>Status</label><select id="e_status"><option ${c.status==='Confirmed'?'selected':''}>Confirmed</option><option ${c.status==='Pending'?'selected':''}>Pending</option></select>
-  <label>📝 Notes</label><textarea id="e_notes" rows="4" placeholder="Write all details here...">${c.notes||''}</textarea>
-  <h3 style="margin-top:20px">🎤 Vendors</h3>
-  <div>${vHtml||'<p style="color:#999;font-size:13px">No vendors yet.</p>'}</div>
-  <div style="background:#FFFaf5;padding:12px;border-radius:12px;margin-top:12px">
-  <label>Vendor Type</label><select id="v_type"><option>📸 Photographer</option><option>🥁 Zaffe</option><option>🎤 DJ</option><option>💐 Decor / Flowers</option><option>👗 Dress</option><option>💄 Makeup</option><option>🎂 Cake</option><option>🏛️ Venue</option><option>🚗 Car</option><option>✨ Other</option></select>
-  <label>Vendor Name</label><input id="v_name" placeholder="Ex: John Photography">
-  <label>Vendor Phone</label><input id="v_phone" placeholder="Ex: 03 123456">
-  <div class="grid2"><div><label>Price $</label><input id="v_price" type="number" placeholder="3000"></div><div><label>Paid $</label><input id="v_paid" type="number" placeholder="1000"></div></div>
-  <label>Details</label><textarea id="v_details" rows="3" placeholder="Ex: Arrival 4pm at home, full day..."></textarea>
-  <button class="smallBtn" onclick="addVendor()" style="margin-top:10px;width:100%;padding:12px">+ Add Vendor</button>
-  </div>
-  <label style="margin-top:20px">✅ To-Do List</label><div>${tHtml}</div>
-  <div style="display:flex;gap:8px;margin-top:8px"><input id="newTask" placeholder="Ex: Book Church"><button onclick="addTask()" style="padding:10px 14px;border:0;border-radius:10px;background:#D9A679;color:white;font-weight:bold">+</button></div>
-  <div class="btnRow"><button class="save" onclick="saveEdit()">Save Changes ✅</button><button class="close" onclick="closeModal()">Close</button></div>`;
-  document.getElementById('modal').style.display='block';
-}
+function render(){let sEl=document.getElementById('search');if(!sEl)return;let q=sEl.value.toLowerCase();let f=document.getElementById('filter').value;let fp=document.getElementById('filterPlan').value;let d=document.getElementById('searchDate').value;let html='';couples.forEach((c,i)=>{if(q&&!(c.bride+' '+c.groom).toLowerCase().includes(q))return;if(f!=='All'&&c.status!==f)return;if(fp!=='All'&&c.planType!==fp)return;if(d&&c.date!==d)return;let total=(c.vendors||[]).reduce((s,v)=>s+(parseInt(v.price)||0),0);let done=(c.tasks||[]).filter(t=>t.done).length;let tot=(c.tasks||[]).length;html+=`<div class="couple" onclick="openCouple(${i})"><button class="del" onclick="del(${i},event)">✕</button><h3>💍 ${c.bride} & ${c.groom}</h3><p>📅 ${c.date||'-'}</p><p>⛪ ${c.church||'-'}</p><p>👥 Guests: ${c.guests||'-'} | 💰 Vendors: $${total}</p><p>✅ Tasks: ${done}/${tot} done</p><span class="badge ${c.status}">${c.status}</span> <span class="badge ${c.planType==='Full Planning'?'FullPlanning':'Coordination'}">${c.planType||'Coordination'}</span>${c.nextFollow?`<div class="follow">📞 Next Follow-Up: <b>${c.nextFollow}</b><br>${c.followNote||''}</div>`:''}<div class="open">Click to open details →</div></div>`;});document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#999">No couples for this search / date.</p>';}
+function openCouple(i){current=i;let c=couples[i];c.vendors=c.vendors||[];c.tasks=c.tasks||[];let vHtml=c.vendors.map((v,vi)=>`<div class="vendor"><h4>${v.type} - ${v.name}</h4><p>📞 ${v.phone||'-'}</p><p>💰 Price: $${v.price||0} | Paid: $${v.paid||0} | Remaining: $${(parseInt(v.price||0)-parseInt(v.paid||0))}</p><p>📝 ${v.details||''}</p><button class="smallBtn" onclick="delVendor(${vi})" style="background:#ffdddd;color:#a00">Delete Vendor</button></div>`).join('');let tHtml=c.tasks.map((t,ti)=>`<div class="task"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${ti})"><span style="${t.done?'text-decoration:line-through;color:#999':''}">${t.t}</span><button onclick="delTask(${ti})" style="margin-left:auto;border:0;background:none">✕</button></div>`).join('');document.getElementById('modalBox').innerHTML=`<h2>💍 ${c.bride} & ${c.groom}</h2><label>Bride</label><input id="e_bride" value="${c.bride||''}"><label>Groom</label><input id="e_groom" value="${c.groom||''}"><label>Date</label><input id="e_date" type="date" value="${c.date||''}"><label>Church</label><input id="e_church" value="${c.church||''}"><label>Venue</label><input id="e_venue" value="${c.venue||''}"><label>Guests</label><input id="e_guests" type="number" value="${c.guests||''}"><label>Total Budget $</label><input id="e_budget" value="${c.budget||''}"><label>Phone</label><input id="e_phone" value="${c.phone||''}"><label>Status</label><select id="e_status"><option ${c.status==='Confirmed'?'selected':''}>Confirmed</option><option ${c.status==='Pending'?'selected':''}>Pending</option></select><label>Type - Coordination or Full Planning</label><select id="e_plan"><option ${c.planType==='Coordination'?'selected':''}>Coordination</option><option ${c.planType==='Full Planning'?'selected':''}>Full Planning</option></select><label>📞 Next Follow-Up Date</label><input id="e_next" type="date" value="${c.nextFollow||''}"><label>Next Follow-Up Note</label><input id="e_followNote" value="${c.followNote||''}" placeholder="Ex: Call to confirm DJ"><label>📝 Notes</label><textarea id="e_notes" rows="4">${c.notes||''}</textarea><h3 style="margin-top:20px">🎤 Vendors</h3><div>${vHtml||'<p style="color:#999;font-size:13px">No vendors yet.</p>'}</div><div style="background:#FFFaf5;padding:12px;border-radius:12px;margin-top:12px"><label>Vendor Type</label><select id="v_type"><option>📸 Photographer</option><option>🥁 Zaffe</option><option>🎤 DJ</option><option>💐 Decor / Flowers</option><option>👗 Dress</option><option>💄 Makeup</option><option>🎂 Cake</option><option>🏛️ Venue</option><option>🚗 Car</option><option>✨ Other</option></select><label>Vendor Name</label><input id="v_name" placeholder="Ex: John Photography"><label>Vendor Phone</label><input id="v_phone" placeholder="Ex: 03 123456"><div class="grid2"><div><label>Price $</label><input id="v_price" type="number" placeholder="3000"></div><div><label>Paid $</label><input id="v_paid" type="number" placeholder="1000"></div></div><label>Details</label><textarea id="v_details" rows="3" placeholder="Ex: Arrival 4pm at home..."></textarea><button class="smallBtn" onclick="addVendor()" style="margin-top:10px;width:100%;padding:12px">+ Add Vendor</button></div><label style="margin-top:20px">✅ To-Do List</label><div>${tHtml}</div><div style="display:flex;gap:8px;margin-top:8px"><input id="newTask" placeholder="Ex: Book Church"><button onclick="addTask()" style="padding:10px 14px;border:0;border-radius:10px;background:#D9A679;color:white;font-weight:bold">+</button></div><div class="btnRow"><button class="save" onclick="saveEdit()">Save Changes ✅</button><button class="close" onclick="closeModal()">Close</button></div>`;document.getElementById('modal').style.display='block';}
 function closeModal(){document.getElementById('modal').style.display='none';}
-function saveEdit(){
-  let c=couples[current];
-  c.bride=document.getElementById('e_bride').value;c.groom=document.getElementById('e_groom').value;c.date=document.getElementById('e_date').value;c.church=document.getElementById('e_church').value;c.venue=document.getElementById('e_venue').value;c.guests=document.getElementById('e_guests').value;c.budget=document.getElementById('e_budget').value;c.phone=document.getElementById('e_phone').value;c.status=document.getElementById('e_status').value;c.notes=document.getElementById('e_notes').value;
-  save();closeModal();
-}
-function addVendor(){
-  let c=couples[current];let name=document.getElementById('v_name').value.trim();
-  if(!name){alert('Please enter vendor name!');return;}
-  c.vendors.push({type:document.getElementById('v_type').value,name:name,phone:document.getElementById('v_phone').value,price:document.getElementById('v_price').value,paid:document.getElementById('v_paid').value,details:document.getElementById('v_details').value});
-  save();openCouple(current);
-}
+function saveEdit(){let c=couples[current];c.bride=document.getElementById('e_bride').value;c.groom=document.getElementById('e_groom').value;c.date=document.getElementById('e_date').value;c.church=document.getElementById('e_church').value;c.venue=document.getElementById('e_venue').value;c.guests=document.getElementById('e_guests').value;c.budget=document.getElementById('e_budget').value;c.phone=document.getElementById('e_phone').value;c.status=document.getElementById('e_status').value;c.planType=document.getElementById('e_plan').value;c.nextFollow=document.getElementById('e_next').value;c.followNote=document.getElementById('e_followNote').value;c.notes=document.getElementById('e_notes').value;save();closeModal();}
+function addVendor(){let c=couples[current];let name=document.getElementById('v_name').value.trim();if(!name){alert('Please enter vendor name!');return;}c.vendors.push({type:document.getElementById('v_type').value,name:name,phone:document.getElementById('v_phone').value,price:document.getElementById('v_price').value,paid:document.getElementById('v_paid').value,details:document.getElementById('v_details').value});save();openCouple(current);}
 function delVendor(vi){couples[current].vendors.splice(vi,1);save();openCouple(current);}
 function addTask(){let v=document.getElementById('newTask').value.trim();if(!v)return;couples[current].tasks.push({t:v,done:false});save();openCouple(current);}
 function toggleTask(ti){couples[current].tasks[ti].done=!couples[current].tasks[ti].done;save();openCouple(current);}
 function delTask(ti){couples[current].tasks.splice(ti,1);save();openCouple(current);}
+function exportData(){let data={couples:couples,personalTasks:personal,events:events,exportedAt:new Date().toISOString()};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='FIDA-Export-'+new Date().toISOString().slice(0,10)+'.json';a.click();let csv='Couple,Date,Church,Guests,Status,Plan Type,Phone,Next Follow-Up,Vendor,Price,Paid\n';couples.forEach(c=>{(c.vendors||[]).length?c.vendors.forEach(v=>{csv+=`"${c.bride} & ${c.groom}",${c.date},"${c.church}",${c.guests},${c.status},${c.planType},${c.phone},${c.nextFollow},"${v.name}",${v.price},${v.paid}\n`}):csv+=`"${c.bride} & ${c.groom}",${c.date},"${c.church}",${c.guests},${c.status},${c.planType},${c.phone},${c.nextFollow},"",,\n`});let b2=new Blob([csv],{type:'text/csv'});let a2=document.createElement('a');a2.href=URL.createObjectURL(b2);a2.download='FIDA-Export-'+new Date().toISOString().slice(0,10)+'.csv';a2.click();alert('Exported! 2 files downloaded - JSON + Excel (CSV)');}
+function getMonday(d){let dd=new Date(d);let day=(dd.getDay()+6)%7;dd.setDate(dd.getDate()-day);dd.setHours(0,0,0,0);return dd;}
+function fmt(d){return d.toISOString().slice(0,10);}
+function renderSchedule(){let grid=document.getElementById('weekGrid');if(!grid)return;let today=new Date();let monday=getMonday(today);monday.setDate(monday.getDate()+weekOffset*7);let days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];let html='';let allTasksHtml='';for(let i=0;i<7;i++){let d=new Date(monday);d.setDate(monday.getDate()+i);let ds=fmt(d);let isToday=ds===fmt(today);let items=[];couples.forEach(c=>{if(c.date===ds)items.push(`💍 Wedding: ${c.bride} & ${c.groom} - ${c.church||''}`);if(c.nextFollow===ds)items.push(`📞 Follow-Up: ${c.bride} & ${c.groom} - ${c.followNote||''}`);(c.tasks||[]).forEach(t=>{if(!t.done)items.push(`✅ To-Do: ${c.bride} - ${t.t}`);});});personal.forEach(p=>{if(p.date===ds)items.push(`⭐ Personal: ${p.title} ${p.done?'✅':''} - ${p.note||''}`);});events.forEach(e=>{if(e.date===ds)items.push(`🎉 Event: ${e.name}`);});html+=`<div class="day ${isToday?'today':''}"><b>${days[i]} ${d.getDate()}/${d.getMonth()+1}</b>${items.map(it=>`<div class="dayItem">${it}</div>`).join('')||'<div style="font-size:11px;color:#aaa;margin-top:6px">No tasks</div>'}</div>`;}grid.innerHTML=html;document.getElementById('weekTitle').innerText=`📅 Week: ${monday.getDate()}/${monday.getMonth()+1} - ${new Date(monday.getTime()+6*86400000).getDate()}/${new Date(monday.getTime()+6*86400000).getMonth()+1} (Mon to Sun)`;let all=[];couples.forEach((c,ci)=>{(c.tasks||[]).forEach((t,ti)=>all.push({label:`${c.bride} & ${c.groom} - ${t.t}`,done:t.done,fn:()=>{couples[ci].tasks[ti].done=!couples[ci].tasks[ti].done;save();}}));if(c.nextFollow)all.push({label:`📞 Follow-Up ${c.bride} & ${c.groom} on ${c.nextFollow} - ${c.followNote||''}`,done:false,fn:()=>{}});});personal.forEach((p,pi)=>all.push({label:`⭐ Personal - ${p.title} on ${p.date} - ${p.note||''}`,done:p.done,fn:()=>{personal[pi].done=!personal[pi].done;savePersonal();}}));document.getElementById('allTasks').innerHTML=all.map((a,i)=>`<div class="task"><input type="checkbox" ${a.done?'checked':''} onchange="toggleAllTask(${i})"><span style="${a.done?'text-decoration:line-through;color:#999':''}">${a.label}</span></div>`).join('')||'<p style="color:#999">No tasks yet.</p>';window._allTasks=all;}
+function toggleAllTask(i){let a=window._allTasks[i];if(a&&a.fn)a.fn();}
+function prevWeek(){weekOffset--;renderSchedule();}
+function nextWeek(){weekOffset++;renderSchedule();}
+function goToday(){weekOffset=0;renderSchedule();}
+function addPersonal(){let t=document.getElementById('personalTitle').value.trim();let d=document.getElementById('personalDate').value;if(!t||!d){alert('Please enter task + date!');return;}personal.unshift({title:t,date:d,note:document.getElementById('personalNote').value,done:false});savePersonal();document.getElementById('personalTitle').value='';document.getElementById('personalNote').value='';renderSchedule();}
+function addEvent(){let n=document.getElementById('evName').value.trim();let d=document.getElementById('evDate').value;if(!n||!d){alert('Please enter event name + date!');return;}events.unshift({name:n,date:d,type:document.getElementById('evType').value,place:document.getElementById('evPlace').value,notes:document.getElementById('evNotes').value});saveEvents();['evName','evPlace','evNotes'].forEach(id=>document.getElementById(id).value='');renderEvents();}
+function delEvent(i){if(confirm('Delete this event?')){events.splice(i,1);saveEvents();}}
+function renderEvents(){let el=document.getElementById('eventList');if(!el)return;let q=(document.getElementById('eventSearch')?.value||'').toLowerCase();let html='';events.forEach((e,i)=>{if(q&&!e.name.toLowerCase().includes(q))return;html+=`<div class="couple"><button class="del" onclick="delEvent(${i})">✕</button><h3>${e.type} ${e.name}</h3><p>📅 ${e.date}</p><p>📍 ${e.place||'-'}</p><p>📝 ${e.notes||''}</p></div>`;});el.innerHTML=html||'<p style="text-align:center;color:#999">No events yet.</p>';}
 </script>
 </body>
 </html>
