@@ -64,7 +64,6 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 </head>
 <body>
 <div id="login"><div class="center"><div style="font-size:40px">🔒</div><h2>FIDA ✨ Planner</h2><p style="color:#888;font-size:13px">Private - For Fida Only</p><input id="pass" type="password" placeholder="Password"><button onclick="checkPass()">Enter</button><p id="err" style="color:red;display:none">Wrong password</p></div></div>
-
 <div id="app" style="display:none">
 <header>FIDA ✨ Planner</header>
 <div class="sync">🟢 SYNCED - You & your partner see the same data live</div>
@@ -74,75 +73,19 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 <button class="navBtn" id="navEvents" onclick="switchPage('events')">🎉 Events</button>
 <button class="navBtn" onclick="logout()" style="background:#eee;color:#333;flex:0.6">🔒 Logout</button>
 </div>
-
 <div id="pageCouples">
-<div class="top">
-<input id="search" placeholder="Search couple..." oninput="render()">
-<input id="searchDate" type="date" onchange="render()"><button onclick="clearDate()" style="background:#eee;color:#333">Clear Date</button>
-<select id="filter" onchange="render()"><option value="All">All Status</option><option>Confirmed</option><option>Pending</option></select>
-<select id="filterPlan" onchange="render()"><option value="All">Coordination + Full Planning</option><option>Coordination</option><option>Full Planning</option></select>
-<button onclick="exportData()">📥 Export All</button>
-</div>
-<div class="card">
-<h2>➕ Add New Couple</h2>
-<div class="grid2">
-<input id="bride" placeholder="Bride Name - ex: Dena">
-<input id="groom" placeholder="Groom Name - ex: Omar">
-<input id="date" type="date" value="2026-11-19">
-<input id="church" placeholder="Church - ex: St. Charbel">
-</div>
-<div class="full"><input id="guests" type="number" placeholder="Number of Guests - ex: 150"></div>
-<div class="grid2" style="margin-top:10px">
-<select id="status"><option>Confirmed</option><option>Pending</option></select>
-<select id="planType"><option>Coordination</option><option>Full Planning</option></select>
-</div>
-<div class="grid2" style="margin-top:10px">
-<input id="phone" placeholder="Phone - ex: 03 123456">
-<input id="nextFollow" type="date">
-</div>
-<div class="full"><input id="followNote" placeholder="Next Follow-up Note - ex: Call to confirm DJ"></div>
-<button class="add" onclick="addCouple()">Add Couple + Save</button>
-<div class="note">Click on any couple to open full details, vendors, budget and notes. Search by date to see who has wedding on that day.</div>
-</div>
-<div id="list" class="couples"></div>
-</div>
-
+<div class="top"><input id="search" placeholder="Search couple..." oninput="render()"><input id="searchDate" type="date" onchange="render()"><button onclick="clearDate()" style="background:#eee;color:#333">Clear Date</button><select id="filter" onchange="render()"><option value="All">All Status</option><option>Confirmed</option><option>Pending</option></select><select id="filterPlan" onchange="render()"><option value="All">Coordination + Full Planning</option><option>Coordination</option><option>Full Planning</option></select><button onclick="exportData()">📥 Export All</button></div>
+<div class="card"><h2>➕ Add New Couple</h2><div class="grid2"><input id="bride" placeholder="Bride Name - ex: Dena"><input id="groom" placeholder="Groom Name - ex: Omar"><input id="date" type="date" value="2026-11-19"><input id="church" placeholder="Church - ex: St. Charbel"></div><div class="full"><input id="guests" type="number" placeholder="Number of Guests - ex: 150"></div><div class="grid2" style="margin-top:10px"><select id="status"><option>Confirmed</option><option>Pending</option></select><select id="planType"><option>Coordination</option><option>Full Planning</option></select></div><div class="grid2" style="margin-top:10px"><input id="phone" placeholder="Phone - ex: 03 123456"><input id="nextFollow" type="date"></div><div class="full"><input id="followNote" placeholder="Next Follow-up Note - ex: Call to confirm DJ"></div><button class="add" onclick="addCouple()">Add Couple + Save</button><div class="note">Click on any couple to open full details, vendors, budget and notes.</div></div><div id="list" class="couples"></div></div>
 <div id="pageSchedule" style="display:none">
 <div class="top"><button onclick="prevWeek()">◀ Prev Week</button><button onclick="goToday()">Today</button><button onclick="nextWeek()">Next Week ▶</button></div>
-
-<div class="card">
-<h2>📍 Today</h2>
-<div id="todayBox"></div>
-</div>
-
+<div class="card"><h2>📍 Today</h2><div id="todayBox"></div></div>
 <div class="card"><h3>📋 My Schedule - All Upcoming</h3><div id="scheduleList"></div></div>
-
 <div class="card"><h2 id="weekTitle">📅 This Week - Mon to Sun</h2><div id="weekGrid" class="week"></div></div>
-
-<div class="card">
-<h2>➕ Add To Schedule</h2>
-<div class="grid2">
-<input id="personalTitle" placeholder="What? - ex: Meeting with Dena, Call DJ, Buy gift">
-<input id="personalDate" type="date">
+<div class="card"><h2>➕ Add To Schedule</h2><div class="grid2"><input id="personalTitle" placeholder="What? - ex: Meeting with Dena, Call DJ, Buy gift"><input id="personalDate" type="date"></div><div class="grid2" style="margin-top:10px"><input id="personalTime" type="time" value="10:00"><input id="personalNote" placeholder="Note / Where? - ex: At Villa Sultana"></div><button class="add" id="addBtnText" onclick="addPersonal()">+ Add To Schedule</button></div>
 </div>
-<div class="grid2" style="margin-top:10px">
-<input id="personalTime" type="time" value="10:00">
-<input id="personalNote" placeholder="Note / Where? - ex: At Villa Sultana">
-</div>
-<button class="add" id="addBtnText" onclick="addPersonal()">+ Add To Schedule</button>
-</div>
-</div>
-
 <div id="pageEvents" style="display:none">
 <div class="top"><input id="eventSearch" placeholder="Search event..." oninput="renderEvents()"><button onclick="exportData()">📥 Export All</button></div>
-<div class="card"><h2>🎉 Add New Event (Not Wedding)</h2>
-<div class="grid2"><input id="evName" placeholder="Event Name - ex: Sara Birthday"><input id="evDate" type="date"></div>
-<div class="grid2" style="margin-top:10px"><select id="evType"><option>🎂 Birthday</option><option>💍 Engagement</option><option>⛪ Baptism</option><option>🎓 Graduation</option><option>🥂 Party</option><option>✨ Other</option></select><input id="evPlace" placeholder="Place - ex: Beirut"></div>
-<div class="full"><textarea id="evNotes" rows="3" placeholder="Notes..."></textarea></div>
-<button class="add" onclick="addEvent()">Add Event + Save</button></div>
-<div id="eventList" class="couples"></div>
-</div>
-
+<div class="card"><h2>🎉 Add New Event (Not Wedding)</h2><div class="grid2"><input id="evName" placeholder="Event Name - ex: Sara Birthday"><input id="evDate" type="date"></div><div class="grid2" style="margin-top:10px"><select id="evType"><option>🎂 Birthday</option><option>💍 Engagement</option><option>⛪ Baptism</option><option>🎓 Graduation</option><option>🥂 Party</option><option>✨ Other</option></select><input id="evPlace" placeholder="Place - ex: Beirut"></div><div class="full"><textarea id="evNotes" rows="3" placeholder="Notes..."></textarea></div><button class="add" onclick="addEvent()">Add Event + Save</button></div><div id="eventList" class="couples"></div></div>
 </div>
 <div id="modal" class="modal"><div class="modalBox" id="modalBox"></div></div>
 <script>
@@ -179,10 +122,9 @@ function exportData(){let data={couples:couples,personalTasks:personal,events:ev
 function getMonday(d){let dd=new Date(d);let day=(dd.getDay()+6)%7;dd.setDate(dd.getDate()-day);dd.setHours(0,0,0,0);return dd;}
 function fmt(d){return d.toISOString().slice(0,10);}
 function getAllScheduleItems(){
+  // FIXED: ONLY personal tasks YOU add. NO weddings, NO events, NO follow-ups.
   let items=[];
-  personal.forEach((p,pi)=>{items.push({date:p.date||'',time:p.time||'10:00',label:`⭐ ${p.title}`,sub:p.note||'',type:'personal',idx:pi,done:!!p.done});});
-  couples.forEach(c=>{if(c.date)items.push({date:c.date,time:'12:00',label:`💍 Wedding: ${c.bride} & ${c.groom}`,sub:c.church||'',type:'wedding',idx:-1,done:false});if(c.nextFollow)items.push({date:c.nextFollow,time:'10:00',label:`📞 Follow-Up: ${c.bride} & ${c.groom}`,sub:c.followNote||'',type:'follow',idx:-1,done:false});});
-  events.forEach(e=>{if(e.date)items.push({date:e.date,time:'12:00',label:`🎉 Event: ${e.name}`,sub:e.place||'',type:'event',idx:-1,done:false});});
+  personal.forEach((p,pi)=>{items.push({date:p.date||'',time:p.time||'10:00',label:p.title,sub:p.note||'',type:'personal',idx:pi,done:!!p.done});});
   items.sort((a,b)=>(a.date+' '+a.time).localeCompare(b.date+' '+b.time));
   return items;
 }
@@ -192,13 +134,13 @@ function renderSchedule(){
   let monday=getMonday(today);monday.setDate(monday.getDate()+weekOffset*7);
   let days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];let html='';
   let allItems=getAllScheduleItems();
-  for(let i=0;i<7;i++){let d=new Date(monday);d.setDate(monday.getDate()+i);let ds=fmt(d);let isToday=ds===todayStr;let dayItems=allItems.filter(it=>it.date===ds);html+=`<div class="day ${isToday?'today':''}"><b>${days[i]} ${d.getDate()}/${d.getMonth()+1}</b>${dayItems.map(it=>`<div class="dayItem"><b>${it.time}</b> - ${it.label}<br><span style="color:#888">${it.sub}</span>${it.type==='personal'?` <button onclick="delPersonal(${it.idx},event)" style="border:0;background:#ffdddd;border-radius:50%;width:20px;height:20px;float:right">✕</button>`:''}</div>`).join('')||'<div style="font-size:11px;color:#aaa;margin-top:6px">No tasks</div>'}</div>`;}
+  for(let i=0;i<7;i++){let d=new Date(monday);d.setDate(monday.getDate()+i);let ds=fmt(d);let isToday=ds===todayStr;let dayItems=allItems.filter(it=>it.date===ds);html+=`<div class="day ${isToday?'today':''}"><b>${days[i]} ${d.getDate()}/${d.getMonth()+1}</b>${dayItems.map(it=>`<div class="dayItem"><b>${it.time}</b> - ${it.label}<br><span style="color:#888">${it.sub}</span> <button onclick="delPersonal(${it.idx},event)" style="border:0;background:#ffdddd;border-radius:50%;width:20px;height:20px;float:right">✕</button></div>`).join('')||'<div style="font-size:11px;color:#aaa;margin-top:6px">No tasks</div>'}</div>`;}
   grid.innerHTML=html;
   document.getElementById('weekTitle').innerText=`📅 Week: ${monday.getDate()}/${monday.getMonth()+1} - ${new Date(monday.getTime()+6*86400000).getDate()}/${new Date(monday.getTime()+6*86400000).getMonth()+1} (Mon to Sun)`;
   let todays=allItems.filter(it=>it.date===todayStr);
-  document.getElementById('todayBox').innerHTML=`<p style="font-size:13px;color:#666;margin:0 0 10px">Date: ${todayStr}</p>${todays.length?todays.map(it=>`<div class="schedRow"><span class="time">🕐 ${it.time}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span>${it.type==='personal'?`<button onclick="editPersonal(${it.idx})" style="border:0;background:#FFF0C9;padding:6px 10px;border-radius:8px;font-weight:bold">Edit ✏️</button><button onclick="delPersonal(${it.idx})" style="border:0;background:#ffdddd;color:#a00;padding:6px 10px;border-radius:8px;font-weight:bold">Delete ✕</button>`:''}</div>`).join(''):'<p style="color:#666">No items today.</p>'}`;
+  document.getElementById('todayBox').innerHTML=`<p style="font-size:13px;color:#666;margin:0 0 10px">Date: ${todayStr}</p>${todays.length?todays.map(it=>`<div class="schedRow"><span class="time">🕐 ${it.time}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button onclick="editPersonal(${it.idx})" style="border:0;background:#FFF0C9;padding:6px 10px;border-radius:8px;font-weight:bold">Edit ✏️</button><button onclick="delPersonal(${it.idx})" style="border:0;background:#ffdddd;color:#a00;padding:6px 10px;border-radius:8px;font-weight:bold">Delete ✕</button></div>`).join(''):'<p style="color:#666">No items today.</p>'}`;
   let upcoming=allItems.filter(it=>it.date>=todayStr);
-  document.getElementById('scheduleList').innerHTML=upcoming.map(it=>`<div class="schedRow"><span class="time">${it.date.slice(5)}<br>🕐 ${it.time}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub} ${it.done?'✅ Done':''}</span></span>${it.type==='personal'?`<button onclick="editPersonal(${it.idx})" style="border:0;background:#FFF0C9;padding:6px 10px;border-radius:8px;font-weight:bold">Edit ✏️</button><button onclick="togglePersonal(${it.idx})" style="border:0;background:#D9F2D9;padding:6px 10px;border-radius:8px;font-weight:bold">${it.done?'Undo':'Done ✅'}</button><button onclick="delPersonal(${it.idx})" style="border:0;background:#ffdddd;color:#a00;padding:6px 10px;border-radius:8px;font-weight:bold">✕</button>`:''}</div>`).join('')||'<p style="color:#999">No upcoming schedule yet. Add one below!</p>';
+  document.getElementById('scheduleList').innerHTML=upcoming.map(it=>`<div class="schedRow"><span class="time">${it.date.slice(5)}<br>🕐 ${it.time}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub} ${it.done?'✅ Done':''}</span></span><button onclick="editPersonal(${it.idx})" style="border:0;background:#FFF0C9;padding:6px 10px;border-radius:8px;font-weight:bold">Edit ✏️</button><button onclick="togglePersonal(${it.idx})" style="border:0;background:#D9F2D9;padding:6px 10px;border-radius:8px;font-weight:bold">${it.done?'Undo':'Done ✅'}</button><button onclick="delPersonal(${it.idx})" style="border:0;background:#ffdddd;color:#a00;padding:6px 10px;border-radius:8px;font-weight:bold">✕</button></div>`).join('')||'<p style="color:#999">No schedule yet. Add one below - only what you add will show here.</p>';
 }
 function prevWeek(){weekOffset--;renderSchedule();}
 function nextWeek(){weekOffset++;renderSchedule();}
