@@ -8,36 +8,62 @@
 *{box-sizing:border-box;font-family:Arial,sans-serif}
 body{margin:0;background:#FFF6EC;color:#3a2a20}
 header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-size:24px;font-weight:bold;letter-spacing:2px}
+.center{max-width:420px;margin:60px auto;background:white;padding:25px;border-radius:20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.1)}
+.center input{width:100%;padding:14px;border-radius:12px;border:1px solid #eee;margin:12px 0;font-size:16px;text-align:center}
+.center button{width:100%;padding:14px;border:0;border-radius:12px;background:#D9A679;color:white;font-weight:bold;font-size:16px}
 .top{max-width:900px;margin:15px auto;padding:0 12px;display:flex;gap:8px}
 .top input,.top select{flex:1;padding:12px;border-radius:12px;border:1px solid #e8d5c0;background:white}
-.top button{padding:12px 16px;border-radius:12px;border:0;background:#D9A679;color:white;font-weight:bold}
+.top button{padding:12px 14px;border-radius:12px;border:0;background:#D9A679;color:white;font-weight:bold}
 .card{max-width:900px;margin:10px auto;background:white;border-radius:18px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
 .card h2{margin:0 0 14px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid2 input,.grid2 select,.full input{width:100%;padding:13px;border-radius:12px;border:1px solid #eee;background:#FFFaf5;font-size:15px}
+.grid2 input,.grid2 select,.full input,.full textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #eee;background:#FFFaf5;font-size:15px}
 .full{margin-top:10px}
 .add{margin-top:14px;width:100%;padding:14px;border:0;border-radius:12px;background:#E8A87C;color:white;font-weight:bold;font-size:16px}
 .note{font-size:13px;color:#888;margin-top:10px;line-height:1.5}
 .couples{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:900px;margin:15px auto;padding:0 12px}
-.couple{background:white;border-radius:16px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.06);position:relative}
+.couple{background:white;border-radius:16px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.06);cursor:pointer;position:relative}
 .couple h3{margin:0 0 6px;font-size:18px}
 .couple p{margin:4px 0;font-size:14px;color:#666}
 .badge{display:inline-block;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold;margin-top:8px}
-.badge.confirmed{background:#D9F2D9;color:#2a6b2a}
-.badge.pending{background:#FFF0C9;color:#8a6a00}
-.del{position:absolute;top:10px;right:10px;border:0;background:#ffeeee;border-radius:50%;width:28px;height:28px;cursor:pointer}
+.badge.Confirmed{background:#D9F2D9;color:#2a6b2a}
+.badge.Pending{background:#FFF0C9;color:#8a6a00}
+.del{position:absolute;top:10px;right:10px;border:0;background:#ffeeee;border-radius:50%;width:28px;height:28px;cursor:pointer;z-index:2}
+.open{font-size:12px;color:#D9A679;font-weight:bold;margin-top:8px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;overflow:auto;padding:15px;z-index:99}
+.modalBox{max-width:600px;background:white;margin:20px auto;border-radius:20px;padding:20px}
+.modalBox h2{margin:0 0 12px}
+.modalBox label{font-size:13px;font-weight:bold;color:#888;display:block;margin:12px 0 5px}
+.modalBox input,.modalBox select,.modalBox textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #eee;font-size:15px}
+.btnRow{display:flex;gap:10px;margin-top:16px}
+.btnRow button{flex:1;padding:13px;border:0;border-radius:12px;font-weight:bold}
+.save{background:#D9A679;color:white}
+.close{background:#eee}
+.task{display:flex;gap:8px;align-items:center;background:#FFFaf5;padding:10px;border-radius:10px;margin-top:8px}
+.task input[type=checkbox]{width:20px;height:20px}
 @media(max-width:600px){.couples{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header>FIDA ✨ Wedding Planner</header>
+<div id="login">
+<div class="center">
+<div style="font-size:40px">🔒</div>
+<h2>FIDA ✨ Wedding Planner</h2>
+<p style="color:#888">Private - Fida w partner bas</p>
+<input id="pass" type="password" placeholder="Password">
+<button onclick="checkPass()">Enter</button>
+<p id="err" style="color:red;display:none">Password ghalat, jarre marra tenye</p>
+<p style="font-size:12px;color:#aaa">Password l halla2: FIDA2026</p>
+</div>
+</div>
 
+<div id="app" style="display:none">
+<header>FIDA ✨ Wedding Planner</header>
 <div class="top">
 <input id="search" placeholder="Search couple... ex: Dena" oninput="render()">
 <select id="filter" onchange="render()"><option value="All">All Status</option><option>Confirmed</option><option>Pending</option></select>
-<button onclick="window.scrollTo({top:0,behavior:'smooth'})">🏠 Home</button>
+<button onclick="logout()">Logout 🔒</button>
 </div>
-
 <div class="card">
 <h2>➕ Add New Couple</h2>
 <div class="grid2">
@@ -52,31 +78,43 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 <input id="phone" placeholder="Phone - ex: 03 123456">
 </div>
 <button class="add" onclick="addCouple()">Add Couple + Save</button>
-<div class="note">Fida, ba3ed ma tkebse Add, l couple byenzal ta7et bel list, w byedall ma7fouz 3andik 7atta iza sakkarte l safha.</div>
+<div class="note">Kebse 3a ayya couple ta tefta7 saf7to l khemle, w ta3mle edit la kell l details.</div>
+</div>
+<div id="list" class="couples"></div>
 </div>
 
-<div id="list" class="couples"></div>
+<div id="modal" class="modal"><div class="modalBox" id="modalBox"></div></div>
 
 <script>
-let couples = JSON.parse(localStorage.getItem('fida_couples') || 'null');
+const MY_PASS = "FIDA2026";
+if(sessionStorage.getItem('fida_ok')==='yes'){showApp();}
+function checkPass(){
+let p=document.getElementById('pass').value;
+if(p===MY_PASS){sessionStorage.setItem('fida_ok','yes');showApp();}
+else{document.getElementById('err').style.display='block';}
+}
+function showApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';render();}
+function logout(){sessionStorage.removeItem('fida_ok');location.reload();}
+
+let couples = JSON.parse(localStorage.getItem('fida_couples_v2') || 'null');
 if(!couples){
 couples=[
-{bride:'Dena',groom:'Omar',date:'2026-11-19',church:'St. Charbel - Kasrouane',guests:'150',status:'Confirmed',phone:'03 123456'},
-{bride:'Mira',groom:'Elie',date:'2026-12-05',church:'Notre Dame - Harissa',guests:'200',status:'Pending',phone:'71 654321'},
-{bride:'Sara',groom:'Karim',date:'2027-01-16',church:'St. Maroun - Beirut',guests:'120',status:'Confirmed',phone:'03 987654'}
+{bride:'Dena',groom:'Omar',date:'2026-11-19',church:'St. Charbel - Kasrouane',guests:'150',status:'Confirmed',phone:'03 123456',venue:'Villa Sultana',budget:'25000',notes:'Badda decor white & gold. Zaffe 8pm.',tasks:[{t:'Book Church',done:true},{t:'Book Photographer',done:false},{t:'Dress Fitting',done:false}]},
+{bride:'Mira',groom:'Elie',date:'2026-12-05',church:'Notre Dame - Harissa',guests:'200',status:'Pending',phone:'71 654321',venue:'Chateau Rweiss',budget:'30000',notes:'3ers 3al b7er, baddon fireworks.',tasks:[{t:'Book Venue',done:true},{t:'DJ',done:false}]},
+{bride:'Sara',groom:'Karim',date:'2027-01-16',church:'St. Maroun - Beirut',guests:'120',status:'Confirmed',phone:'03 987654',venue:'Phoenicia',budget:'18000',notes:'Small intimate wedding.',tasks:[{t:'Book Church',done:true}]}
 ];
-localStorage.setItem('fida_couples',JSON.stringify(couples));
+localStorage.setItem('fida_couples_v2',JSON.stringify(couples));
 }
-function save(){localStorage.setItem('fida_couples',JSON.stringify(couples))}
+function save(){localStorage.setItem('fida_couples_v2',JSON.stringify(couples))}
 function addCouple(){
 let b=document.getElementById('bride').value.trim();
 let g=document.getElementById('groom').value.trim();
-if(!b||!g){alert('Fida, 3abbe esm l 3arous w l 3aris la2a!');return;}
-couples.unshift({bride:b,groom:g,date:document.getElementById('date').value,church:document.getElementById('church').value,guests:document.getElementById('guests').value,status:document.getElementById('status').value,phone:document.getElementById('phone').value});
+if(!b||!g){alert('3abbe esm l 3arous w l 3aris!');return;}
+couples.unshift({bride:b,groom:g,date:document.getElementById('date').value,church:document.getElementById('church').value,guests:document.getElementById('guests').value,status:document.getElementById('status').value,phone:document.getElementById('phone').value,venue:'',budget:'',notes:'',tasks:[]});
 save();render();
 ['bride','groom','church','guests','phone'].forEach(id=>document.getElementById(id).value='');
 }
-function del(i){if(confirm('Baddik tem7e hayda l couple?')){couples.splice(i,1);save();render();}}
+function del(i,e){e.stopPropagation();if(confirm('Baddik tem7e hayda l couple?')){couples.splice(i,1);save();render();}}
 function render(){
 let q=document.getElementById('search').value.toLowerCase();
 let f=document.getElementById('filter').value;
@@ -84,11 +122,51 @@ let html='';
 couples.forEach((c,i)=>{
 if(q && !(c.bride+' '+c.groom).toLowerCase().includes(q)) return;
 if(f!=='All' && c.status!==f) return;
-html+=`<div class="couple"><button class="del" onclick="del(${i})">✕</button><h3>💍 ${c.bride} & ${c.groom}</h3><p>📅 ${c.date || '-'}</p><p>⛪ ${c.church || '-'}</p><p>👥 Guests: ${c.guests || '-'}</p><p>📞 ${c.phone || '-'}</p><span class="badge ${c.status==='Confirmed'?'confirmed':'pending'}">${c.status}</span></div>`;
+html+=`<div class="couple" onclick="openCouple(${i})"><button class="del" onclick="del(${i},event)">✕</button><h3>💍 ${c.bride} & ${c.groom}</h3><p>📅 ${c.date||'-'}</p><p>⛪ ${c.church||'-'}</p><p>👥 Guests: ${c.guests||'-'}</p><span class="badge ${c.status}">${c.status}</span><div class="open">Kebse la tefta7 l details →</div></div>`;
 });
-document.getElementById('list').innerHTML=html || '<p style="text-align:center;color:#999">Ma fi couples ba3ed. Zide awal couple men fo2.</p>';
+document.getElementById('list').innerHTML=html || '<p style="text-align:center;color:#999">Ma fi couples ba3ed.</p>';
 }
-render();
+let current=-1;
+function openCouple(i){
+current=i;let c=couples[i];
+let tasksHtml=c.tasks.map((t,ti)=>`<div class="task"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${ti})"><span style="${t.done?'text-decoration:line-through;color:#999':''}">${t.t}</span><button onclick="delTask(${ti})" style="margin-left:auto;border:0;background:none">✕</button></div>`).join('');
+document.getElementById('modalBox').innerHTML=`
+<h2>💍 ${c.bride} & ${c.groom}</h2>
+<label>Bride</label><input id="e_bride" value="${c.bride||''}">
+<label>Groom</label><input id="e_groom" value="${c.groom||''}">
+<label>Date</label><input id="e_date" type="date" value="${c.date||''}">
+<label>Church</label><input id="e_church" value="${c.church||''}">
+<label>Venue / Salle</label><input id="e_venue" value="${c.venue||''}">
+<label>Guests</label><input id="e_guests" type="number" value="${c.guests||''}">
+<label>Budget $</label><input id="e_budget" value="${c.budget||''}">
+<label>Phone</label><input id="e_phone" value="${c.phone||''}">
+<label>Status</label><select id="e_status"><option ${c.status==='Confirmed'?'selected':''}>Confirmed</option><option ${c.status==='Pending'?'selected':''}>Pending</option></select>
+<label>Notes / Details</label><textarea id="e_notes" rows="4">${c.notes||''}</textarea>
+<label>Tasks / To-Do</label>
+<div id="tasks">${tasksHtml}</div>
+<div style="display:flex;gap:8px;margin-top:8px"><input id="newTask" placeholder="Add new task - ex: Book DJ"><button onclick="addTask()" style="padding:10px 14px;border:0;border-radius:10px;background:#D9A679;color:white;font-weight:bold">+</button></div>
+<div class="btnRow"><button class="save" onclick="saveEdit()">Save Changes ✅</button><button class="close" onclick="closeModal()">Close</button></div>
+`;
+document.getElementById('modal').style.display='block';
+}
+function closeModal(){document.getElementById('modal').style.display='none';}
+function saveEdit(){
+let c=couples[current];
+c.bride=document.getElementById('e_bride').value;
+c.groom=document.getElementById('e_groom').value;
+c.date=document.getElementById('e_date').value;
+c.church=document.getElementById('e_church').value;
+c.venue=document.getElementById('e_venue').value;
+c.guests=document.getElementById('e_guests').value;
+c.budget=document.getElementById('e_budget').value;
+c.phone=document.getElementById('e_phone').value;
+c.status=document.getElementById('e_status').value;
+c.notes=document.getElementById('e_notes').value;
+save();render();closeModal();
+}
+function addTask(){let v=document.getElementById('newTask').value.trim();if(!v)return;couples[current].tasks.push({t:v,done:false});save();openCouple(current);}
+function toggleTask(ti){couples[current].tasks[ti].done=!couples[current].tasks[ti].done;save();openCouple(current);}
+function delTask(ti){couples[current].tasks.splice(ti,1);save();openCouple(current);}
 </script>
 </body>
 </html>
