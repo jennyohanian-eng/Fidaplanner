@@ -119,8 +119,6 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 
 <div class="card"><h2 id="weekTitle">📅 This Week - Mon to Sun</h2><div id="weekGrid" class="week"></div></div>
 
-<div class="card"><h3>✅ All To-Do List - Couples + Personal</h3><div id="allTasks"></div></div>
-
 <div class="card">
 <h2>➕ Add To Schedule</h2>
 <div class="grid2">
@@ -131,7 +129,7 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 <input id="personalTime" type="time" value="10:00">
 <input id="personalNote" placeholder="Note / Where? - ex: At Villa Sultana">
 </div>
-<button class="add" onclick="addPersonal()">+ Add To Schedule</button>
+<button class="add" id="addBtnText" onclick="addPersonal()">+ Add To Schedule</button>
 </div>
 </div>
 
@@ -197,15 +195,11 @@ function renderSchedule(){
   for(let i=0;i<7;i++){let d=new Date(monday);d.setDate(monday.getDate()+i);let ds=fmt(d);let isToday=ds===todayStr;let dayItems=allItems.filter(it=>it.date===ds);html+=`<div class="day ${isToday?'today':''}"><b>${days[i]} ${d.getDate()}/${d.getMonth()+1}</b>${dayItems.map(it=>`<div class="dayItem"><b>${it.time}</b> - ${it.label}<br><span style="color:#888">${it.sub}</span>${it.type==='personal'?` <button onclick="delPersonal(${it.idx},event)" style="border:0;background:#ffdddd;border-radius:50%;width:20px;height:20px;float:right">✕</button>`:''}</div>`).join('')||'<div style="font-size:11px;color:#aaa;margin-top:6px">No tasks</div>'}</div>`;}
   grid.innerHTML=html;
   document.getElementById('weekTitle').innerText=`📅 Week: ${monday.getDate()}/${monday.getMonth()+1} - ${new Date(monday.getTime()+6*86400000).getDate()}/${new Date(monday.getTime()+6*86400000).getMonth()+1} (Mon to Sun)`;
-  // TODAY - ONLY TODAY
   let todays=allItems.filter(it=>it.date===todayStr);
   document.getElementById('todayBox').innerHTML=`<p style="font-size:13px;color:#666;margin:0 0 10px">Date: ${todayStr}</p>${todays.length?todays.map(it=>`<div class="schedRow"><span class="time">🕐 ${it.time}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span>${it.type==='personal'?`<button onclick="editPersonal(${it.idx})" style="border:0;background:#FFF0C9;padding:6px 10px;border-radius:8px;font-weight:bold">Edit ✏️</button><button onclick="delPersonal(${it.idx})" style="border:0;background:#ffdddd;color:#a00;padding:6px 10px;border-radius:8px;font-weight:bold">Delete ✕</button>`:''}</div>`).join(''):'<p style="color:#666">No items today.</p>'}`;
-  // Full schedule list
   let upcoming=allItems.filter(it=>it.date>=todayStr);
   document.getElementById('scheduleList').innerHTML=upcoming.map(it=>`<div class="schedRow"><span class="time">${it.date.slice(5)}<br>🕐 ${it.time}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub} ${it.done?'✅ Done':''}</span></span>${it.type==='personal'?`<button onclick="editPersonal(${it.idx})" style="border:0;background:#FFF0C9;padding:6px 10px;border-radius:8px;font-weight:bold">Edit ✏️</button><button onclick="togglePersonal(${it.idx})" style="border:0;background:#D9F2D9;padding:6px 10px;border-radius:8px;font-weight:bold">${it.done?'Undo':'Done ✅'}</button><button onclick="delPersonal(${it.idx})" style="border:0;background:#ffdddd;color:#a00;padding:6px 10px;border-radius:8px;font-weight:bold">✕</button>`:''}</div>`).join('')||'<p style="color:#999">No upcoming schedule yet. Add one below!</p>';
-  let all=[];couples.forEach((c,ci)=>{(c.tasks||[]).forEach((t,ti)=>all.push({label:`${c.bride} & ${c.groom} - ${t.t}`,done:t.done,fn:()=>{couples[ci].tasks[ti].done=!couples[ci].tasks[ti].done;save();}}));if(c.nextFollow)all.push({label:`📞 Follow-Up ${c.bride} & ${c.groom} on ${c.nextFollow} - ${c.followNote||''}`,done:false,fn:()=>{}});});personal.forEach((p,pi)=>all.push({label:`⭐ Personal - ${p.title} on ${p.date} at ${p.time||''} - ${p.note||''}`,done:p.done,fn:()=>{personal[pi].done=!personal[pi].done;savePersonal();}}));document.getElementById('allTasks').innerHTML=all.map((a,i)=>`<div class="task"><input type="checkbox" ${a.done?'checked':''} onchange="toggleAllTask(${i})"><span style="${a.done?'text-decoration:line-through;color:#999':''}">${a.label}</span></div>`).join('')||'<p style="color:#999">No tasks yet.</p>';window._allTasks=all;
 }
-function toggleAllTask(i){let a=window._allTasks[i];if(a&&a.fn)a.fn();}
 function prevWeek(){weekOffset--;renderSchedule();}
 function nextWeek(){weekOffset++;renderSchedule();}
 function goToday(){weekOffset=0;renderSchedule();document.getElementById('todayBox').scrollIntoView({behavior:'smooth'});}
