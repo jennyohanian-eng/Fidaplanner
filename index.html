@@ -53,10 +53,10 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 <div class="center">
 <div style="font-size:40px">🔒</div>
 <h2>FIDA ✨ Wedding Planner</h2>
-<p style="color:#888">Private - la Fida bas</p>
+<p style="color:#888">Private - For Fida Only</p>
 <input id="pass" type="password" placeholder="Password">
 <button onclick="checkPass()">Enter</button>
-<p id="err" style="color:red;display:none">Password ghalat</p>
+<p id="err" style="color:red;display:none">Wrong password</p>
 <p style="font-size:12px;color:#aaa">Password: FIDA2026</p>
 </div>
 </div>
@@ -64,25 +64,25 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 <div id="app" style="display:none">
 <header>FIDA ✨ Wedding Planner</header>
 <div class="top">
-<input id="search" placeholder="Dawre 3a couple... ex: Dena" oninput="render()">
-<select id="filter" onchange="render()"><option value="All">Kell l Status</option><option>Confirmed</option><option>Pending</option></select>
+<input id="search" placeholder="Search couple... ex: Dena" oninput="render()">
+<select id="filter" onchange="render()"><option value="All">All Status</option><option>Confirmed</option><option>Pending</option></select>
 <button onclick="logout()">Logout 🔒</button>
 </div>
 <div class="card">
-<h2>➕ Zide Couple Jdid</h2>
+<h2>➕ Add New Couple</h2>
 <div class="grid2">
-<input id="bride" placeholder="Esm l 3arous - ex: Dena">
-<input id="groom" placeholder="Esm l 3aris - ex: Omar">
+<input id="bride" placeholder="Bride Name - ex: Dena">
+<input id="groom" placeholder="Groom Name - ex: Omar">
 <input id="date" type="date" value="2026-11-19">
-<input id="church" placeholder="Kenise - ex: St. Charbel">
+<input id="church" placeholder="Church - ex: St. Charbel">
 </div>
-<div class="full"><input id="guests" type="number" placeholder="3adad l dayouf - ex: 150"></div>
+<div class="full"><input id="guests" type="number" placeholder="Number of Guests - ex: 150"></div>
 <div class="grid2" style="margin-top:10px">
 <select id="status"><option>Confirmed</option><option>Pending</option></select>
 <input id="phone" placeholder="Phone - ex: 03 123456">
 </div>
 <button class="add" onclick="addCouple()">Add Couple + Save</button>
-<div class="note">Kebse 3a ayya couple ta tefta7 saf7to l khemle, fiya l vendors, l budget, w l notes bel 3arabe.</div>
+<div class="note">Click on any couple to open full details, vendors, budget and notes.</div>
 </div>
 <div id="list" class="couples"></div>
 </div>
@@ -95,72 +95,72 @@ if(sessionStorage.getItem('fida_ok')==='yes'){showApp();}
 function checkPass(){if(document.getElementById('pass').value===MY_PASS){sessionStorage.setItem('fida_ok','yes');showApp();}else{document.getElementById('err').style.display='block';}}
 function showApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';render();}
 function logout(){sessionStorage.removeItem('fida_ok');location.reload();}
-let couples=JSON.parse(localStorage.getItem('fida_couples_v3')||'null');
+let couples=JSON.parse(localStorage.getItem('fida_couples_v4')||'null');
 if(!couples){
 couples=[
-{bride:'Dena',groom:'Omar',date:'2026-11-19',church:'St. Charbel - Kasrouane',guests:'150',status:'Confirmed',phone:'03 123456',venue:'Villa Sultana',budget:'25000',notes:'Badda decor abyad w dahabe. Zaffe 8pm. L 3arous badda fustan simple.',tasks:[{t:'E7joz l kenise',done:true},{t:'E7joz l photographer',done:false}],vendors:[
-{type:'📸 Photographer',name:'John Photography',phone:'03 111222',price:'3000',paid:'1000',details:'Full day, 2 photographers, album + video. Yousal 4pm 3al beit.'},
-{type:'🥁 Zaffe',name:'Zaffe Beirut Stars',phone:'71 333444',price:'2500',paid:'500',details:'Zaffe 8pm, 10 shabeb, dabke w tabla. Yousalo 7:30.'},
-{type:'🎤 DJ',name:'DJ Karim',phone:'03 555666',price:'1500',paid:'0',details:'Men 9pm la 2am. Bado playlist 3arabe w english.'}
+{bride:'Dena',groom:'Omar',date:'2026-11-19',church:'St. Charbel - Kasrouane',guests:'150',status:'Confirmed',phone:'03 123456',venue:'Villa Sultana',budget:'25000',notes:'Bride wants white & gold decor. Zaffe at 8pm. Bride wants simple dress.',tasks:[{t:'Book Church',done:true},{t:'Book Photographer',done:false}],vendors:[
+{type:'📸 Photographer',name:'John Photography',phone:'03 111222',price:'3000',paid:'1000',details:'Full day, 2 photographers, album + video. Arrival 4pm at home.'},
+{type:'🥁 Zaffe',name:'Zaffe Beirut Stars',phone:'71 333444',price:'2500',paid:'500',details:'Zaffe at 8pm, 10 dancers, dabke & tabla. Arrival 7:30pm.'},
+{type:'🎤 DJ',name:'DJ Karim',phone:'03 555666',price:'1500',paid:'0',details:'From 9pm to 2am. Arabic & English playlist.'}
 ]},
-{bride:'Mira',groom:'Elie',date:'2026-12-05',church:'Notre Dame - Harissa',guests:'200',status:'Pending',phone:'71 654321',venue:'Chateau Rweiss',budget:'30000',notes:'3ers 3al b7er, baddon fireworks.',tasks:[{t:'E7joz l salle',done:true}],vendors:[
-{type:'📸 Photographer',name:'Studio Mira',phone:'03 777888',price:'2800',paid:'0',details:'Photo + video drone.'},
-{type:'🥁 Zaffe',name:'Zaffe Lebnen',phone:'70 999000',price:'2000',paid:'0',details:'Ba3ed l kenise de8re.'}
+{bride:'Mira',groom:'Elie',date:'2026-12-05',church:'Notre Dame - Harissa',guests:'200',status:'Pending',phone:'71 654321',venue:'Chateau Rweiss',budget:'30000',notes:'Beach wedding, they want fireworks.',tasks:[{t:'Book Venue',done:true}],vendors:[
+{type:'📸 Photographer',name:'Studio Mira',phone:'03 777888',price:'2800',paid:'0',details:'Photo + drone video.'},
+{type:'🥁 Zaffe',name:'Zaffe Lebnen',phone:'70 999000',price:'2000',paid:'0',details:'Right after church.'}
 ]}
 ];
-localStorage.setItem('fida_couples_v3',JSON.stringify(couples));
+localStorage.setItem('fida_couples_v4',JSON.stringify(couples));
 }
-function save(){localStorage.setItem('fida_couples_v3',JSON.stringify(couples))}
+function save(){localStorage.setItem('fida_couples_v4',JSON.stringify(couples))}
 function addCouple(){
 let b=document.getElementById('bride').value.trim();let g=document.getElementById('groom').value.trim();
-if(!b||!g){alert('3abbe esm l 3arous w l 3aris!');return;}
+if(!b||!g){alert('Please enter Bride and Groom name!');return;}
 couples.unshift({bride:b,groom:g,date:document.getElementById('date').value,church:document.getElementById('church').value,guests:document.getElementById('guests').value,status:document.getElementById('status').value,phone:document.getElementById('phone').value,venue:'',budget:'',notes:'',tasks:[],vendors:[]});
 save();render();['bride','groom','church','guests','phone'].forEach(id=>document.getElementById(id).value='');
 }
-function del(i,e){e.stopPropagation();if(confirm('Baddik tem7e hayda l couple?')){couples.splice(i,1);save();render();}}
+function del(i,e){e.stopPropagation();if(confirm('Delete this couple?')){couples.splice(i,1);save();render();}}
 function render(){
 let q=document.getElementById('search').value.toLowerCase();let f=document.getElementById('filter').value;let html='';
 couples.forEach((c,i)=>{
 if(q && !(c.bride+' '+c.groom).toLowerCase().includes(q))return;
 if(f!=='All' && c.status!==f)return;
 let total=c.vendors.reduce((s,v)=>s+(parseInt(v.price)||0),0);
-html+=`<div class="couple" onclick="openCouple(${i})"><button class="del" onclick="del(${i},event)">✕</button><h3>💍 ${c.bride} & ${c.groom}</h3><p>📅 ${c.date||'-'}</p><p>⛪ ${c.church||'-'}</p><p>👥 Dayouf: ${c.guests||'-'} | 💰 Vendors: $${total}</p><span class="badge ${c.status}">${c.status}</span><div class="open">Kebse la tefta7 l details →</div></div>`;
+html+=`<div class="couple" onclick="openCouple(${i})"><button class="del" onclick="del(${i},event)">✕</button><h3>💍 ${c.bride} & ${c.groom}</h3><p>📅 ${c.date||'-'}</p><p>⛪ ${c.church||'-'}</p><p>👥 Guests: ${c.guests||'-'} | 💰 Vendors: $${total}</p><span class="badge ${c.status}">${c.status}</span><div class="open">Click to open details →</div></div>`;
 });
-document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#999">Ma fi couples ba3ed.</p>';
+document.getElementById('list').innerHTML=html||'<p style="text-align:center;color:#999">No couples yet.</p>';
 }
 let current=-1;
 function openCouple(i){
 current=i;let c=couples[i];
-let vHtml=c.vendors.map((v,vi)=>`<div class="vendor"><h4>${v.type} - ${v.name}</h4><p>📞 ${v.phone||'-'}</p><p>💰 Budget: $${v.price||0} | Madfou3: $${v.paid||0} | Be2e: $${(parseInt(v.price||0)-parseInt(v.paid||0))}</p><p>📝 ${v.details||''}</p><button class="smallBtn" onclick="delVendor(${vi})" style="background:#ffdddd;color:#a00">Msa7 l vendor</button></div>`).join('');
+let vHtml=c.vendors.map((v,vi)=>`<div class="vendor"><h4>${v.type} - ${v.name}</h4><p>📞 ${v.phone||'-'}</p><p>💰 Price: $${v.price||0} | Paid: $${v.paid||0} | Remaining: $${(parseInt(v.price||0)-parseInt(v.paid||0))}</p><p>📝 ${v.details||''}</p><button class="smallBtn" onclick="delVendor(${vi})" style="background:#ffdddd;color:#a00">Delete Vendor</button></div>`).join('');
 let tHtml=c.tasks.map((t,ti)=>`<div class="task"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${ti})"><span style="${t.done?'text-decoration:line-through;color:#999':''}">${t.t}</span><button onclick="delTask(${ti})" style="margin-left:auto;border:0;background:none">✕</button></div>`).join('');
 document.getElementById('modalBox').innerHTML=`
 <h2>💍 ${c.bride} & ${c.groom}</h2>
-<label>3arous</label><input id="e_bride" value="${c.bride||''}">
-<label>3aris</label><input id="e_groom" value="${c.groom||''}">
-<label>Tarikh</label><input id="e_date" type="date" value="${c.date||''}">
-<label>Kenise</label><input id="e_church" value="${c.church||''}">
-<label>Salle / Venue</label><input id="e_venue" value="${c.venue||''}">
-<label>3adad l Dayouf</label><input id="e_guests" type="number" value="${c.guests||''}">
-<label>Budget l Kelle $</label><input id="e_budget" value="${c.budget||''}">
+<label>Bride</label><input id="e_bride" value="${c.bride||''}">
+<label>Groom</label><input id="e_groom" value="${c.groom||''}">
+<label>Date</label><input id="e_date" type="date" value="${c.date||''}">
+<label>Church</label><input id="e_church" value="${c.church||''}">
+<label>Venue</label><input id="e_venue" value="${c.venue||''}">
+<label>Guests</label><input id="e_guests" type="number" value="${c.guests||''}">
+<label>Total Budget $</label><input id="e_budget" value="${c.budget||''}">
 <label>Phone</label><input id="e_phone" value="${c.phone||''}">
 <label>Status</label><select id="e_status"><option ${c.status==='Confirmed'?'selected':''}>Confirmed</option><option ${c.status==='Pending'?'selected':''}>Pending</option></select>
-<label>📝 Notes - Ktbe bel 3arabe hon</label><textarea id="e_notes" rows="4" placeholder="Ex: Badda decor abyad w dahabe, zaffe 8pm, l 3arous badda fustan simple...">${c.notes||''}</textarea>
+<label>📝 Notes</label><textarea id="e_notes" rows="4" placeholder="Write all details here...">${c.notes||''}</textarea>
 
 <h3 style="margin-top:20px">🎤 Vendors - Photographer, Zaffe, DJ...</h3>
-<div>${vHtml||'<p style="color:#999;font-size:13px">Ba3ed ma fi vendors. Zide awal vendor ta7et.</p>'}</div>
+<div>${vHtml||'<p style="color:#999;font-size:13px">No vendors yet. Add first vendor below.</p>'}</div>
 <div style="background:#FFFaf5;padding:12px;border-radius:12px;margin-top:12px">
-<label>Nou3 l Vendor</label>
-<select id="v_type"><option>📸 Photographer</option><option>🥁 Zaffe</option><option>🎤 DJ</option><option>💐 Decor / Ward</option><option>👗 Fustan / Dress</option><option>💄 Makeup</option><option>🎂 Cake</option><option>🏛️ Salle / Venue</option><option>🚗 Sayyara</option><option>✨ Ghayro</option></select>
-<label>Esm l Vendor</label><input id="v_name" placeholder="Ex: John Photography">
-<label>Phone l Vendor</label><input id="v_phone" placeholder="Ex: 03 123456">
-<div class="grid2"><div><label>Budget / Se3ro $</label><input id="v_price" type="number" placeholder="3000"></div><div><label>Madfou3 $</label><input id="v_paid" type="number" placeholder="1000"></div></div>
-<label>Details - kell shi 3anno</label><textarea id="v_details" rows="3" placeholder="Ex: Yousal 4pm 3al beit, full day, 2 photographers, album + video..."></textarea>
-<button class="smallBtn" onclick="addVendor()" style="margin-top:10px;width:100%;padding:12px">+ Zid l Vendor</button>
+<label>Vendor Type</label>
+<select id="v_type"><option>📸 Photographer</option><option>🥁 Zaffe</option><option>🎤 DJ</option><option>💐 Decor / Flowers</option><option>👗 Dress</option><option>💄 Makeup</option><option>🎂 Cake</option><option>🏛️ Venue</option><option>🚗 Car</option><option>✨ Other</option></select>
+<label>Vendor Name</label><input id="v_name" placeholder="Ex: John Photography">
+<label>Vendor Phone</label><input id="v_phone" placeholder="Ex: 03 123456">
+<div class="grid2"><div><label>Price $</label><input id="v_price" type="number" placeholder="3000"></div><div><label>Paid $</label><input id="v_paid" type="number" placeholder="1000"></div></div>
+<label>Details - Everything about this vendor</label><textarea id="v_details" rows="3" placeholder="Ex: Arrival 4pm at home, full day, 2 photographers, album + video..."></textarea>
+<button class="smallBtn" onclick="addVendor()" style="margin-top:10px;width:100%;padding:12px">+ Add Vendor</button>
 </div>
 
 <label style="margin-top:20px">✅ To-Do List</label>
 <div>${tHtml}</div>
-<div style="display:flex;gap:8px;margin-top:8px"><input id="newTask" placeholder="Ex: E7joz l kenise"><button onclick="addTask()" style="padding:10px 14px;border:0;border-radius:10px;background:#D9A679;color:white;font-weight:bold">+</button></div>
+<div style="display:flex;gap:8px;margin-top:8px"><input id="newTask" placeholder="Ex: Book Church"><button onclick="addTask()" style="padding:10px 14px;border:0;border-radius:10px;background:#D9A679;color:white;font-weight:bold">+</button></div>
 
 <div class="btnRow"><button class="save" onclick="saveEdit()">Save Changes ✅</button><button class="close" onclick="closeModal()">Close</button></div>
 `;
@@ -175,7 +175,7 @@ save();render();closeModal();
 function addVendor(){
 let c=couples[current];
 let name=document.getElementById('v_name').value.trim();
-if(!name){alert('Ktbe esm l vendor!');return;}
+if(!name){alert('Please enter vendor name!');return;}
 c.vendors.push({type:document.getElementById('v_type').value,name:name,phone:document.getElementById('v_phone').value,price:document.getElementById('v_price').value,paid:document.getElementById('v_paid').value,details:document.getElementById('v_details').value});
 save();openCouple(current);
 }
