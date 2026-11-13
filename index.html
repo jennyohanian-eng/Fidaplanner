@@ -56,6 +56,9 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 .day b{font-size:13px}
 .day.today{border:2px solid #D9A679}
 .dayItem{font-size:12px;background:#FFFaf5;padding:6px;border-radius:8px;margin-top:6px}
+.schedRow{display:flex;gap:10px;align-items:center;background:#FFFaf5;padding:12px;border-radius:12px;margin-top:8px}
+.schedRow .time{font-weight:bold;min-width:55px;text-align:center;background:white;padding:6px;border-radius:8px;font-size:13px}
+.todayBox{background:#FFF0C9;border:2px solid #D9A679;border-radius:14px;padding:14px;margin-top:12px}
 @media(max-width:700px){.couples{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.week{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -105,13 +108,28 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 </div>
 
 <div id="pageSchedule" style="display:none">
-<div class="top"><button onclick="prevWeek()">◀ Prev Week</button><button onclick="nextWeek()">Next Week ▶</button><button onclick="goToday()">Today</button></div>
-<div class="card"><h2 id="weekTitle">📅 This Week - Mon to Sun</h2><p style="font-size:13px;color:#888">All your To-Do, Follow-ups, Weddings + Personal tasks in one place.</p>
-<div class="grid2"><input id="personalTitle" placeholder="Personal Task - ex: Buy gift, Call mom, Pay bill"><input id="personalDate" type="date"></div>
-<div class="full"><input id="personalNote" placeholder="Note - ex: For Dena wedding"></div>
-<button class="add" onclick="addPersonal()">+ Add Personal Task</button>
+<div class="top"><button onclick="prevWeek()">◀ Prev Week</button><button onclick="goToday()">📍 Today - Show My Day</button><button onclick="nextWeek()">Next Week ▶</button></div>
+
+<div class="card">
+<h2>📅 Add To Schedule - Personal / Work</h2>
+<p style="font-size:13px;color:#888">Hayde ente btzide, w hiye btechoufo awal shi ta7et.</p>
+<div class="grid2">
+<input id="personalTitle" placeholder="What? - ex: Meeting with Dena, Call DJ, Buy gift">
+<input id="personalDate" type="date">
 </div>
-<div id="weekGrid" class="week"></div>
+<div class="grid2" style="margin-top:10px">
+<input id="personalTime" type="time" value="10:00">
+<input id="personalNote" placeholder="Note / Where? - ex: At Villa Sultana, Call 03...">
+</div>
+<button class="add" onclick="addPersonal()">+ Add To Schedule</button>
+
+<div id="todayBox" class="todayBox"></div>
+</div>
+
+<div class="card"><h2 id="weekTitle">📅 This Week - Mon to Sun</h2><div id="weekGrid" class="week"></div></div>
+
+<div class="card"><h3>📋 My Schedule - All Upcoming - Sorted by Date + Time</h3><p style="font-size:12px;color:#888">Hiye btechouf hayda awal shi - kel shi ente zedti + weddings + follow-ups</p><div id="scheduleList"></div></div>
+
 <div class="card"><h3>✅ All To-Do List - Couples + Personal</h3><div id="allTasks"></div></div>
 </div>
 
@@ -142,7 +160,7 @@ function logout(){sessionStorage.removeItem('fida_ok');location.reload();}
 function clearDate(){document.getElementById('searchDate').value='';render();}
 ref.on('value',snap=>{let val=snap.val();if(!val&&!loaded){let examples=[{bride:'Dena',groom:'Omar',date:'2026-11-19',church:'St. Charbel - Kasrouane',guests:'150',status:'Confirmed',planType:'Full Planning',phone:'03 123456',nextFollow:'2026-11-14',followNote:'Call to confirm DJ',venue:'Villa Sultana',budget:'25000',notes:'Bride wants white & gold decor. Zaffe at 8pm.',tasks:[{t:'Book Church',done:true},{t:'Book Photographer',done:false}],vendors:[{type:'📸 Photographer',name:'John Photography',phone:'03 111222',price:'3000',paid:'1000',details:'Full day, 2 photographers.'},{type:'🥁 Zaffe',name:'Zaffe Beirut Stars',phone:'71 333444',price:'2500',paid:'500',details:'Zaffe at 8pm, 10 dancers.'},{type:'🎤 DJ',name:'DJ Karim',phone:'03 555666',price:'1500',paid:'0',details:'From 9pm to 2am.'}]},{bride:'Mira',groom:'Elie',date:'2026-12-05',church:'Notre Dame - Harissa',guests:'200',status:'Pending',planType:'Coordination',phone:'71 654321',nextFollow:'2026-11-20',followNote:'Send venue options',venue:'Chateau Rweiss',budget:'30000',notes:'Beach wedding, they want fireworks.',tasks:[{t:'Book Venue',done:true}],vendors:[{type:'📸 Photographer',name:'Studio Mira',phone:'03 777888',price:'2800',paid:'0',details:'Photo + drone video.'}]}];ref.set(examples);return;}loaded=true;couples=val?Object.keys(val).map(k=>({...val[k],_key:k})):[];render();renderSchedule();});
 refPersonal.on('value',snap=>{let v=snap.val();personal=v?Object.keys(v).map(k=>({...v[k],_key:k})):[];renderSchedule();});
-refEvents.on('value',snap=>{let v=snap.val();events=v?Object.keys(v).map(k=>({...v[k],_key:k})):[];renderEvents();});
+refEvents.on('value',snap=>{let v=snap.val();events=v?Object.keys(v).map(k=>({...v[k],_key:k})):[];renderEvents();renderSchedule();});
 function save(){let o={};couples.forEach((c,i)=>{let cp={...c};delete cp._key;o['c'+i]=cp;});ref.set(o);}
 function savePersonal(){let o={};personal.forEach((p,i)=>{let cp={...p};delete cp._key;o['p'+i]=cp;});refPersonal.set(o);}
 function saveEvents(){let o={};events.forEach((e,i)=>{let cp={...e};delete cp._key;o['e'+i]=cp;});refEvents.set(o);}
@@ -160,12 +178,38 @@ function delTask(ti){couples[current].tasks.splice(ti,1);save();openCouple(curre
 function exportData(){let data={couples:couples,personalTasks:personal,events:events,exportedAt:new Date().toISOString()};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='FIDA-Export-'+new Date().toISOString().slice(0,10)+'.json';a.click();let csv='Couple,Date,Church,Guests,Status,Plan Type,Phone,Next Follow-Up,Vendor,Price,Paid\n';couples.forEach(c=>{(c.vendors||[]).length?c.vendors.forEach(v=>{csv+=`"${c.bride} & ${c.groom}",${c.date},"${c.church}",${c.guests},${c.status},${c.planType},${c.phone},${c.nextFollow},"${v.name}",${v.price},${v.paid}\n`}):csv+=`"${c.bride} & ${c.groom}",${c.date},"${c.church}",${c.guests},${c.status},${c.planType},${c.phone},${c.nextFollow},"",,\n`});let b2=new Blob([csv],{type:'text/csv'});let a2=document.createElement('a');a2.href=URL.createObjectURL(b2);a2.download='FIDA-Export-'+new Date().toISOString().slice(0,10)+'.csv';a2.click();alert('Exported! 2 files downloaded - JSON + Excel (CSV)');}
 function getMonday(d){let dd=new Date(d);let day=(dd.getDay()+6)%7;dd.setDate(dd.getDate()-day);dd.setHours(0,0,0,0);return dd;}
 function fmt(d){return d.toISOString().slice(0,10);}
-function renderSchedule(){let grid=document.getElementById('weekGrid');if(!grid)return;let today=new Date();let monday=getMonday(today);monday.setDate(monday.getDate()+weekOffset*7);let days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];let html='';for(let i=0;i<7;i++){let d=new Date(monday);d.setDate(monday.getDate()+i);let ds=fmt(d);let isToday=ds===fmt(today);let items=[];couples.forEach(c=>{if(c.date===ds)items.push(`💍 Wedding: ${c.bride} & ${c.groom} - ${c.church||''}`);if(c.nextFollow===ds)items.push(`📞 Follow-Up: ${c.bride} & ${c.groom} - ${c.followNote||''}`);(c.tasks||[]).forEach(t=>{if(!t.done)items.push(`✅ To-Do: ${c.bride} - ${t.t}`);});});personal.forEach(p=>{if(p.date===ds)items.push(`⭐ Personal: ${p.title} ${p.done?'✅':''} - ${p.note||''}`);});events.forEach(e=>{if(e.date===ds)items.push(`🎉 Event: ${e.name}`);});html+=`<div class="day ${isToday?'today':''}"><b>${days[i]} ${d.getDate()}/${d.getMonth()+1}</b>${items.map(it=>`<div class="dayItem">${it}</div>`).join('')||'<div style="font-size:11px;color:#aaa;margin-top:6px">No tasks</div>'}</div>`;}grid.innerHTML=html;document.getElementById('weekTitle').innerText=`📅 Week: ${monday.getDate()}/${monday.getMonth()+1} - ${new Date(monday.getTime()+6*86400000).getDate()}/${new Date(monday.getTime()+6*86400000).getMonth()+1} (Mon to Sun)`;let all=[];couples.forEach((c,ci)=>{(c.tasks||[]).forEach((t,ti)=>all.push({label:`${c.bride} & ${c.groom} - ${t.t}`,done:t.done,fn:()=>{couples[ci].tasks[ti].done=!couples[ci].tasks[ti].done;save();}}));if(c.nextFollow)all.push({label:`📞 Follow-Up ${c.bride} & ${c.groom} on ${c.nextFollow} - ${c.followNote||''}`,done:false,fn:()=>{}});});personal.forEach((p,pi)=>all.push({label:`⭐ Personal - ${p.title} on ${p.date} - ${p.note||''}`,done:p.done,fn:()=>{personal[pi].done=!personal[pi].done;savePersonal();}}));document.getElementById('allTasks').innerHTML=all.map((a,i)=>`<div class="task"><input type="checkbox" ${a.done?'checked':''} onchange="toggleAllTask(${i})"><span style="${a.done?'text-decoration:line-through;color:#999':''}">${a.label}</span></div>`).join('')||'<p style="color:#999">No tasks yet.</p>';window._allTasks=all;}
+function getAllScheduleItems(){
+  let items=[];
+  personal.forEach((p,pi)=>{items.push({date:p.date||'',time:p.time||'10:00',label:`⭐ ${p.title}`,sub:p.note||'',type:'personal',idx:pi,done:!!p.done});});
+  couples.forEach(c=>{if(c.date)items.push({date:c.date,time:'12:00',label:`💍 Wedding: ${c.bride} & ${c.groom}`,sub:c.church||'',type:'wedding',idx:-1,done:false});if(c.nextFollow)items.push({date:c.nextFollow,time:'10:00',label:`📞 Follow-Up: ${c.bride} & ${c.groom}`,sub:c.followNote||'',type:'follow',idx:-1,done:false});});
+  events.forEach(e=>{if(e.date)items.push({date:e.date,time:'12:00',label:`🎉 Event: ${e.name}`,sub:e.place||'',type:'event',idx:-1,done:false});});
+  items.sort((a,b)=>(a.date+' '+a.time).localeCompare(b.date+' '+b.time));
+  return items;
+}
+function renderSchedule(){
+  let grid=document.getElementById('weekGrid');if(!grid)return;
+  let today=new Date();let todayStr=fmt(today);
+  let monday=getMonday(today);monday.setDate(monday.getDate()+weekOffset*7);
+  let days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];let html='';
+  let allItems=getAllScheduleItems();
+  for(let i=0;i<7;i++){let d=new Date(monday);d.setDate(monday.getDate()+i);let ds=fmt(d);let isToday=ds===todayStr;let dayItems=allItems.filter(it=>it.date===ds);html+=`<div class="day ${isToday?'today':''}"><b>${days[i]} ${d.getDate()}/${d.getMonth()+1}</b>${dayItems.map(it=>`<div class="dayItem"><b>${it.time}</b> - ${it.label}<br><span style="color:#888">${it.sub}</span>${it.type==='personal'?` <button onclick="delPersonal(${it.idx},event)" style="border:0;background:#ffdddd;border-radius:50%;width:20px;height:20px;float:right">✕</button>`:''}</div>`).join('')||'<div style="font-size:11px;color:#aaa;margin-top:6px">No tasks</div>'}</div>`;}
+  grid.innerHTML=html;
+  document.getElementById('weekTitle').innerText=`📅 Week: ${monday.getDate()}/${monday.getMonth()+1} - ${new Date(monday.getTime()+6*86400000).getDate()}/${new Date(monday.getTime()+6*86400000).getMonth()+1} (Mon to Sun)`;
+  // Today box
+  let todays=allItems.filter(it=>it.date===todayStr);
+  document.getElementById('todayBox').innerHTML=`<h3 style="margin:0">📍 Today - ${todayStr} - Shu 3andik l Yom:</h3>${todays.length?todays.map(it=>`<div class="schedRow"><span class="time">🕐 ${it.time}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span>${it.type==='personal'?`<button onclick="delPersonal(${it.idx})" style="border:0;background:#ffdddd;color:#a00;padding:6px 10px;border-radius:8px;font-weight:bold">Delete ✕</button>`:''}</div>`).join(''):'<p style="color:#666">Ma 3andik shi l yom - Rte7e 😊</p>'}`;
+  // Full schedule list below - this is what she sees first
+  let upcoming=allItems.filter(it=>it.date>=todayStr);
+  document.getElementById('scheduleList').innerHTML=upcoming.map(it=>`<div class="schedRow"><span class="time">${it.date.slice(5)}<br>🕐 ${it.time}</span><span style="flex:1"><b>${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub} ${it.done?'✅ Done':''}</span></span>${it.type==='personal'?`<button onclick="togglePersonal(${it.idx})" style="border:0;background:#D9F2D9;padding:6px 10px;border-radius:8px;font-weight:bold">${it.done?'Undo':'Done ✅'}</button><button onclick="delPersonal(${it.idx})" style="border:0;background:#ffdddd;color:#a00;padding:6px 10px;border-radius:8px;font-weight:bold">✕</button>`:''}</div>`).join('')||'<p style="color:#999">No upcoming schedule yet. Add one above!</p>';
+  let all=[];couples.forEach((c,ci)=>{(c.tasks||[]).forEach((t,ti)=>all.push({label:`${c.bride} & ${c.groom} - ${t.t}`,done:t.done,fn:()=>{couples[ci].tasks[ti].done=!couples[ci].tasks[ti].done;save();}}));if(c.nextFollow)all.push({label:`📞 Follow-Up ${c.bride} & ${c.groom} on ${c.nextFollow} - ${c.followNote||''}`,done:false,fn:()=>{}});});personal.forEach((p,pi)=>all.push({label:`⭐ Personal - ${p.title} on ${p.date} at ${p.time||''} - ${p.note||''}`,done:p.done,fn:()=>{personal[pi].done=!personal[pi].done;savePersonal();}}));document.getElementById('allTasks').innerHTML=all.map((a,i)=>`<div class="task"><input type="checkbox" ${a.done?'checked':''} onchange="toggleAllTask(${i})"><span style="${a.done?'text-decoration:line-through;color:#999':''}">${a.label}</span></div>`).join('')||'<p style="color:#999">No tasks yet.</p>';window._allTasks=all;
+}
 function toggleAllTask(i){let a=window._allTasks[i];if(a&&a.fn)a.fn();}
 function prevWeek(){weekOffset--;renderSchedule();}
 function nextWeek(){weekOffset++;renderSchedule();}
-function goToday(){weekOffset=0;renderSchedule();}
-function addPersonal(){let t=document.getElementById('personalTitle').value.trim();let d=document.getElementById('personalDate').value;if(!t||!d){alert('Please enter task + date!');return;}personal.unshift({title:t,date:d,note:document.getElementById('personalNote').value,done:false});savePersonal();document.getElementById('personalTitle').value='';document.getElementById('personalNote').value='';renderSchedule();}
+function goToday(){weekOffset=0;renderSchedule();document.getElementById('todayBox').scrollIntoView({behavior:'smooth'});}
+function addPersonal(){let t=document.getElementById('personalTitle').value.trim();let d=document.getElementById('personalDate').value;let tm=document.getElementById('personalTime').value||'10:00';if(!t||!d){alert('Please enter task + date!');return;}personal.unshift({title:t,date:d,time:tm,note:document.getElementById('personalNote').value,done:false});savePersonal();document.getElementById('personalTitle').value='';document.getElementById('personalNote').value='';renderSchedule();}
+function delPersonal(idx,e){if(e)e.stopPropagation();if(confirm('Delete this schedule item?')){personal.splice(idx,1);savePersonal();}}
+function togglePersonal(idx){personal[idx].done=!personal[idx].done;savePersonal();}
 function addEvent(){let n=document.getElementById('evName').value.trim();let d=document.getElementById('evDate').value;if(!n||!d){alert('Please enter event name + date!');return;}events.unshift({name:n,date:d,type:document.getElementById('evType').value,place:document.getElementById('evPlace').value,notes:document.getElementById('evNotes').value});saveEvents();['evName','evPlace','evNotes'].forEach(id=>document.getElementById(id).value='');renderEvents();}
 function delEvent(i){if(confirm('Delete this event?')){events.splice(i,1);saveEvents();}}
 function renderEvents(){let el=document.getElementById('eventList');if(!el)return;let q=(document.getElementById('eventSearch')?.value||'').toLowerCase();let html='';events.forEach((e,i)=>{if(q&&!e.name.toLowerCase().includes(q))return;html+=`<div class="couple"><button class="del" onclick="delEvent(${i})">✕</button><h3>${e.type} ${e.name}</h3><p>📅 ${e.date}</p><p>📍 ${e.place||'-'}</p><p>📝 ${e.notes||''}</p></div>`;});el.innerHTML=html||'<p style="text-align:center;color:#999">No events yet.</p>';}
