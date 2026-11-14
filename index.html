@@ -88,7 +88,6 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 </div>
 <div id="pageSchedule" style="display:none">
 <div class="top"><button onclick="prevWeek()">◀ Prev Week</button><button onclick="goToday()">Today</button><button onclick="nextWeek()">Next Week ▶</button></div>
-<div class="card" style="background:#E8F5E9;border:1px solid #C8E6C9"><h2 style="margin:0">🔔 Schedule Reminders</h2><p style="font-size:13px;color:#555;margin:6px 0 0">Ayya shi btzido hon, fike tekbos <b>📲 Send to Fida</b> la teb3at reminder la Fida 3a WhatsApp <b>961 70 705 074</b>, aw <b>📅 Calendar</b> la ya3mol notification automatic 3a telephonak.</p></div>
 <div class="card"><h2>📍 Today</h2><div id="todayBox"></div></div>
 <div class="card"><h3>📋 My Schedule - All Upcoming</h3><div id="scheduleList"></div></div>
 <div class="card"><h2 id="weekTitle">📅 This Week - Mon to Sun</h2><div id="weekGrid" class="week"></div></div>
@@ -119,7 +118,6 @@ function formatTime12(t){if(!t)return'';let [h,m]=t.split(':').map(Number);let a
 function formatDateNice(ds){if(!ds)return'';let months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];let parts=ds.split('-');if(parts.length<3)return ds;return parseInt(parts[2])+' '+months[parseInt(parts[1])-1]+' '+parts[0];}
 function formatDateShort(ds){if(!ds)return'';let months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];let p=ds.split('-');return parseInt(p[2])+' '+months[parseInt(p[1])-1];}
 function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-// REMINDER - SCHEDULE ONLY
 function sendScheduleToFida(idx,e){
   if(e) e.stopPropagation();
   let p=personal[idx];
