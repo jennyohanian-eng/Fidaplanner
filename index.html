@@ -38,6 +38,10 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 .open{font-size:12px;color:#D9A679;font-weight:bold;margin-top:8px}
 .sync{text-align:center;font-size:12px;color:#2a6b2a;font-weight:bold;margin:8px}
 .follow{font-size:13px;background:#FFF0C9;padding:7px 10px;border-radius:10px;margin-top:8px}
+.calBtn{margin-top:6px;width:100%;padding:8px;border:0;border-radius:8px;background:#4285F4;color:white;font-weight:bold;font-size:12px;cursor:pointer}
+.waBtn{margin-top:6px;width:100%;padding:10px;border:0;border-radius:8px;background:#25D366;color:white;font-weight:bold;font-size:13px;cursor:pointer}
+.waBtnSmall{padding:9px 10px;border:0;border-radius:8px;background:#25D366;color:white;font-weight:bold;font-size:12px;cursor:pointer;flex-shrink:0}
+.calBtnSmall{padding:9px 10px;border:0;border-radius:8px;background:#4285F4;color:white;font-weight:bold;font-size:12px;cursor:pointer;flex-shrink:0}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;overflow:auto;padding:15px;z-index:99}
 .modalBox{max-width:640px;background:white;margin:20px auto;border-radius:20px;padding:20px}
 .modalBox label{font-size:13px;font-weight:bold;color:#888;display:block;margin:12px 0 5px}
@@ -56,7 +60,7 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 .day b{font-size:13px}
 .day.today{border:2px solid #D9A679}
 .dayItem{font-size:12px;background:#FFFaf5;padding:6px;border-radius:8px;margin-top:6px}
-.schedRow{display:flex;gap:8px;align-items:center;background:#FFFaf5;padding:12px;border-radius:12px;margin-top:8px}
+.schedRow{display:flex;gap:8px;align-items:center;background:#FFFaf5;padding:12px;border-radius:12px;margin-top:8px;flex-wrap:wrap}
 .schedRow .time{font-weight:bold;min-width:68px;text-align:center;background:white;padding:6px 4px;border-radius:8px;font-size:12px;line-height:1.3}
 .iconBtn{border:0;background:white;border-radius:50%;width:28px;height:28px;font-size:14px;cursor:pointer;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.1)}
 .checkBtn{border:0;border-radius:8px;width:28px;height:28px;font-size:14px;cursor:pointer;flex-shrink:0;font-weight:bold}
@@ -84,6 +88,7 @@ header{background:#D9A679;color:white;text-align:center;padding:22px 10px;font-s
 </div>
 <div id="pageSchedule" style="display:none">
 <div class="top"><button onclick="prevWeek()">◀ Prev Week</button><button onclick="goToday()">Today</button><button onclick="nextWeek()">Next Week ▶</button></div>
+<div class="card" style="background:#E8F5E9;border:1px solid #C8E6C9"><h2 style="margin:0">🔔 Schedule Reminders</h2><p style="font-size:13px;color:#555;margin:6px 0 0">Ayya shi btzido hon, fike tekbos <b>📲 Send to Fida</b> la teb3at reminder la Fida 3a WhatsApp <b>961 70 705 074</b>, aw <b>📅 Calendar</b> la ya3mol notification automatic 3a telephonak.</p></div>
 <div class="card"><h2>📍 Today</h2><div id="todayBox"></div></div>
 <div class="card"><h3>📋 My Schedule - All Upcoming</h3><div id="scheduleList"></div></div>
 <div class="card"><h2 id="weekTitle">📅 This Week - Mon to Sun</h2><div id="weekGrid" class="week"></div></div>
@@ -103,6 +108,7 @@ const db=firebase.database();
 const ref=db.ref('couples'); const refPersonal=db.ref('personalTasks'); const refEvents=db.ref('events');
 let couples=[]; let personal=[]; let events=[]; let loaded=false; let weekOffset=0; let current=-1; let currentPage='couples'; let editPersonalIdx=-1;
 const MY_PASS="fida2026";
+const FIDA_NUMBER="96170705074";
 function checkPass(){if(document.getElementById('pass').value===MY_PASS){sessionStorage.setItem('fida_ok','yes');showApp();}else{document.getElementById('err').style.display='block';}}
 function showApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';switchPage(currentPage);}
 function switchPage(p){currentPage=p;['couples','schedule','events'].forEach(x=>{document.getElementById('page'+x.charAt(0).toUpperCase()+x.slice(1)).style.display=(x===p?'block':'none');document.getElementById('nav'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active',x===p);});render();renderSchedule();renderEvents();}
@@ -113,6 +119,27 @@ function formatTime12(t){if(!t)return'';let [h,m]=t.split(':').map(Number);let a
 function formatDateNice(ds){if(!ds)return'';let months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];let parts=ds.split('-');if(parts.length<3)return ds;return parseInt(parts[2])+' '+months[parseInt(parts[1])-1]+' '+parts[0];}
 function formatDateShort(ds){if(!ds)return'';let months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];let p=ds.split('-');return parseInt(p[2])+' '+months[parseInt(p[1])-1];}
 function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+// REMINDER - SCHEDULE ONLY
+function sendScheduleToFida(idx,e){
+  if(e) e.stopPropagation();
+  let p=personal[idx];
+  let msg='Hey Fida ✨ Reminder: '+p.title+' on '+formatDateNice(p.date)+' at '+formatTime12(p.time)+' - '+(p.note||'')+' - From FIDA Planner 📅';
+  let url='https://wa.me/'+FIDA_NUMBER+'?text='+encodeURIComponent(msg);
+  window.open(url,'_blank');
+}
+function addScheduleToCalendar(idx,e){
+  if(e) e.stopPropagation();
+  let p=personal[idx];
+  if(!p.date){alert('No date!');return;}
+  let t=p.time||'10:00';
+  let d=p.date.replaceAll('-','');
+  let start=d+'T'+t.replace(':','')+'00';
+  let hh=parseInt(t.split(':')[0])+1;
+  let endTime=String(hh).padStart(2,'0')+':'+t.split(':')[1];
+  let end=d+'T'+endTime.replace(':','')+'00';
+  let url='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(p.title)+'&dates='+start+'/'+end+'&details='+encodeURIComponent((p.note||'')+' - FIDA Planner')+'&trp=true';
+  window.open(url,'_blank');
+}
 ref.on('value',snap=>{let val=snap.val();if(!val&&!loaded){let examples=[{bride:'Dena',groom:'Omar',date:'2026-11-19',church:'St. Charbel - Kasrouane',guests:'150',status:'Confirmed',planType:'Full Planning',phone:'03 123456',nextFollow:'2026-11-14',followNote:'Call to confirm DJ',venue:'Villa Sultana',budget:'25000',notes:'Bride wants white & gold decor. Zaffe at 8pm.',tasks:[{t:'Book Church',done:true},{t:'Book Photographer',done:false}],vendors:[{type:'📸 Photographer',name:'John Photography',phone:'03 111222',price:'3000',paid:'1000',details:'Full day, 2 photographers.'},{type:'🥁 Zaffe',name:'Zaffe Beirut Stars',phone:'71 333444',price:'2500',paid:'500',details:'Zaffe at 8pm, 10 dancers.'},{type:'🎤 DJ',name:'DJ Karim',phone:'03 555666',price:'1500',paid:'0',details:'From 9pm to 2am.'}]},{bride:'Mira',groom:'Elie',date:'2026-12-05',church:'Notre Dame - Harissa',guests:'200',status:'Pending',planType:'Coordination',phone:'71 654321',nextFollow:'2026-11-20',followNote:'Send venue options',venue:'Chateau Rweiss',budget:'30000',notes:'Beach wedding, they want fireworks.',tasks:[{t:'Book Venue',done:true}],vendors:[{type:'📸 Photographer',name:'Studio Mira',phone:'03 777888',price:'2800',paid:'0',details:'Photo + drone video.'}]}];ref.set(examples);return;}loaded=true;couples=val?Object.keys(val).map(k=>({...val[k],_key:k})):[];render();renderSchedule();});
 refPersonal.on('value',snap=>{let v=snap.val();personal=v?Object.keys(v).map(k=>({...v[k],_key:k})):[];renderSchedule();});
 refEvents.on('value',snap=>{let v=snap.val();events=v?Object.keys(v).map(k=>({...v[k],_key:k})):[];renderEvents();renderSchedule();});
@@ -124,11 +151,7 @@ function del(i,e){e.stopPropagation();if(confirm('Delete this couple?')){couples
 function render(){
   let sEl=document.getElementById('search');if(!sEl)return;
   let q=sEl.value.toLowerCase();let f=document.getElementById('filter').value;let fp=document.getElementById('filterPlan').value;let d=document.getElementById('searchDate').value;
-  // SORT: Earliest wedding date first, latest last
-  let sorted=couples.map((c,idx)=>({c:c,idx:idx})).sort((a,b)=>{
-    let da=a.c.date||'9999-12-31';let db=b.c.date||'9999-12-31';
-    return da.localeCompare(db);
-  });
+  let sorted=couples.map((c,idx)=>({c:c,idx:idx})).sort((a,b)=>{let da=a.c.date||'9999-12-31';let db=b.c.date||'9999-12-31';return da.localeCompare(db);});
   let html='';
   sorted.forEach(item=>{
     let c=item.c;let i=item.idx;
@@ -152,12 +175,7 @@ function toggleTask(ti){couples[current].tasks[ti].done=!couples[current].tasks[
 function delTask(ti){couples[current].tasks.splice(ti,1);save();openCouple(current);}
 function exportData(){let data={couples:couples,personalTasks:personal,events:events,exportedAt:new Date().toISOString()};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='FIDA-Export-'+new Date().toISOString().slice(0,10)+'.json';a.click();let csv='Couple,Date,Church,Guests,Status,Plan Type,Phone,Next Follow-Up,Vendor,Price,Paid\n';couples.forEach(c=>{(c.vendors||[]).length?c.vendors.forEach(v=>{csv+=`"${c.bride} & ${c.groom}",${c.date},"${c.church}",${c.guests},${c.status},${c.planType},${c.phone},${c.nextFollow},"${v.name}",${v.price},${v.paid}\n`}):csv+=`"${c.bride} & ${c.groom}",${c.date},"${c.church}",${c.guests},${c.status},${c.planType},${c.phone},${c.nextFollow},"",,\n`});let b2=new Blob([csv],{type:'text/csv'});let a2=document.createElement('a');a2.href=URL.createObjectURL(b2);a2.download='FIDA-Export-'+new Date().toISOString().slice(0,10)+'.csv';a2.click();alert('Exported! 2 files downloaded - JSON + Excel (CSV)');}
 function getMonday(d){let dd=new Date(d.getFullYear(),d.getMonth(),d.getDate());let day=(dd.getDay()+6)%7;dd.setDate(dd.getDate()-day);return dd;}
-function getAllScheduleItems(){
-  let items=[];
-  personal.forEach((p,pi)=>{items.push({date:p.date||'',time:p.time||'10:00',label:p.title,sub:p.note||'',type:'personal',idx:pi,done:!!p.done});});
-  items.sort((a,b)=>(a.date+' '+a.time).localeCompare(b.date+' '+b.time));
-  return items;
-}
+function getAllScheduleItems(){let items=[];personal.forEach((p,pi)=>{items.push({date:p.date||'',time:p.time||'10:00',label:p.title,sub:p.note||'',type:'personal',idx:pi,done:!!p.done});});items.sort((a,b)=>(a.date+' '+a.time).localeCompare(b.date+' '+b.time));return items;}
 function renderSchedule(){
   let grid=document.getElementById('weekGrid');if(!grid)return;
   let today=new Date();let todayStr=fmt(today);
@@ -165,14 +183,14 @@ function renderSchedule(){
   let days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];let html='';
   let allItems=getAllScheduleItems();
   let monthsShort=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  for(let i=0;i<7;i++){let d=new Date(monday.getFullYear(),monday.getMonth(),monday.getDate()+i);let ds=fmt(d);let isToday=ds===todayStr;let dayItems=allItems.filter(it=>it.date===ds);html+=`<div class="day ${isToday?'today':''}"><b>${days[i]} ${d.getDate()} ${monthsShort[d.getMonth()]}</b>${dayItems.map(it=>`<div class="dayItem"><b>${formatTime12(it.time)}</b> - ${it.label}<br><span style="color:#888">${it.sub}</span> <button onclick="delPersonal(${it.idx},event)" style="border:0;background:#ffdddd;border-radius:50%;width:20px;height:20px;float:right">✕</button></div>`).join('')||'<div style="font-size:11px;color:#aaa;margin-top:6px">No tasks</div>'}</div>`;}
+  for(let i=0;i<7;i++){let d=new Date(monday.getFullYear(),monday.getMonth(),monday.getDate()+i);let ds=fmt(d);let isToday=ds===todayStr;let dayItems=allItems.filter(it=>it.date===ds);html+=`<div class="day ${isToday?'today':''}"><b>${days[i]} ${d.getDate()} ${monthsShort[d.getMonth()]}</b>${dayItems.map(it=>`<div class="dayItem"><b>${formatTime12(it.time)}</b> - ${it.label}<br><span style="color:#888">${it.sub}</span><div style="display:flex;gap:4px;margin-top:5px"><button onclick="sendScheduleToFida(${it.idx},event)" style="flex:1;border:0;border-radius:6px;background:#25D366;color:white;font-weight:bold;font-size:10px;padding:5px">📲 Fida</button><button onclick="addScheduleToCalendar(${it.idx},event)" style="flex:1;border:0;border-radius:6px;background:#4285F4;color:white;font-weight:bold;font-size:10px;padding:5px">📅 Cal</button></div> <button onclick="delPersonal(${it.idx},event)" style="border:0;background:#ffdddd;border-radius:50%;width:20px;height:20px;float:right">✕</button></div>`).join('')||'<div style="font-size:11px;color:#aaa;margin-top:6px">No tasks</div>'}</div>`;}
   grid.innerHTML=html;
   let endDate=new Date(monday.getFullYear(),monday.getMonth(),monday.getDate()+6);
   document.getElementById('weekTitle').innerText=`📅 Week: ${monday.getDate()} ${monthsShort[monday.getMonth()]} - ${endDate.getDate()} ${monthsShort[endDate.getMonth()]} (Mon to Sun)`;
   let todays=allItems.filter(it=>it.date===todayStr);
-  document.getElementById('todayBox').innerHTML=`<p style="font-size:13px;color:#666;margin:0 0 10px">Date: ${formatDateNice(todayStr)}</p>${todays.length?todays.map(it=>`<div class="schedRow"><span class="time">${formatTime12(it.time)}</span><span style="flex:1"><b style="${it.done?'text-decoration:line-through;color:#999':''}">${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button class="iconBtn" onclick="editPersonal(${it.idx})">✏️</button><button class="checkBtn ${it.done?'on':'off'}" onclick="togglePersonal(${it.idx})">✓</button><button class="iconBtn" onclick="delPersonal(${it.idx})">✕</button></div>`).join(''):'<p style="color:#666">No items today.</p>'}`;
+  document.getElementById('todayBox').innerHTML=`<p style="font-size:13px;color:#666;margin:0 0 10px">Date: ${formatDateNice(todayStr)}</p>${todays.length?todays.map(it=>`<div class="schedRow"><span class="time">${formatTime12(it.time)}</span><span style="flex:1;min-width:140px"><b style="${it.done?'text-decoration:line-through;color:#999':''}">${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button class="waBtnSmall" onclick="sendScheduleToFida(${it.idx},event)">📲 Send to Fida</button><button class="calBtnSmall" onclick="addScheduleToCalendar(${it.idx},event)">📅 Calendar</button><button class="iconBtn" onclick="editPersonal(${it.idx})">✏️</button><button class="checkBtn ${it.done?'on':'off'}" onclick="togglePersonal(${it.idx})">✓</button><button class="iconBtn" onclick="delPersonal(${it.idx})">✕</button></div>`).join(''):'<p style="color:#666">No items today.</p>'}`;
   let upcoming=allItems.filter(it=>it.date>=todayStr);
-  document.getElementById('scheduleList').innerHTML=upcoming.map(it=>`<div class="schedRow"><span class="time">${formatDateShort(it.date)}<br>${formatTime12(it.time)}</span><span style="flex:1"><b style="${it.done?'text-decoration:line-through;color:#999':''}">${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button class="iconBtn" onclick="editPersonal(${it.idx})">✏️</button><button class="checkBtn ${it.done?'on':'off'}" onclick="togglePersonal(${it.idx})">✓</button><button class="iconBtn" onclick="delPersonal(${it.idx})">✕</button></div>`).join('')||'<p style="color:#999">No schedule yet. Add one below - only what you add will show here.</p>';
+  document.getElementById('scheduleList').innerHTML=upcoming.map(it=>`<div class="schedRow"><span class="time">${formatDateShort(it.date)}<br>${formatTime12(it.time)}</span><span style="flex:1;min-width:140px"><b style="${it.done?'text-decoration:line-through;color:#999':''}">${it.label}</b><br><span style="font-size:12px;color:#666">${it.sub}</span></span><button class="waBtnSmall" onclick="sendScheduleToFida(${it.idx},event)">📲 Send to Fida</button><button class="calBtnSmall" onclick="addScheduleToCalendar(${it.idx},event)">📅 Calendar</button><button class="iconBtn" onclick="editPersonal(${it.idx})">✏️</button><button class="checkBtn ${it.done?'on':'off'}" onclick="togglePersonal(${it.idx})">✓</button><button class="iconBtn" onclick="delPersonal(${it.idx})">✕</button></div>`).join('')||'<p style="color:#999">No schedule yet. Add one below - only what you add will show here.</p>';
 }
 function prevWeek(){weekOffset--;renderSchedule();}
 function nextWeek(){weekOffset++;renderSchedule();}
